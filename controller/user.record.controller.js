@@ -124,7 +124,7 @@ let userRecord = {
     var now = new Date();
     var data = req.body.profileimage;
     var filename = `${req.body.id }_${now}.jpg`;
-    var dir = '/var/www/downloads.femalehire.com/cloud/images/';
+    var dir = '/var/www/photos.spider.com.ng/cloud/images/';
 
     var base64Data = data.replace(/^data:image\/\w+;base64,/, "");
     var binaryData = Buffer.from(base64Data, 'base64');
@@ -135,7 +135,7 @@ let userRecord = {
       User.findOneAndUpdate({
         '_id': req.body.id
       }, {
-        'personal.avatar': 'https://downloads.femalehire.com/cloud/images/' + filename,
+        'personal.avatar': 'https://photos.spider.com.ng/cloud/images/' + filename,
         'last_seen': new Date()
 
       }, {
@@ -161,14 +161,14 @@ let userRecord = {
   },
 
   processAvatar: (req, res) => {
-    const baseURL = '/var/www/downloads.femalehire.com/cloud/images/';
+    const baseURL = '/var/www/photos.spider.com.ng/cloud/images/';
     let filename = req.body.filename;
     imageProcessor(`${baseURL}${filename}`).then(response => {
       res.json({
         success: true,
         message: 'Operation successful!',
         result: {
-          url: `https://downloads.femalehire.com/cloud/images/${filename}`
+          url: `https://photos.spider.com.ng/cloud/images/${filename}`
         }
       });
     }).catch(err => {

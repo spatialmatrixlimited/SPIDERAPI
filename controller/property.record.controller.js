@@ -84,7 +84,7 @@ let propertyRecord = {
     let now = new Date().getTime();
     let data = payload.photo;
     let filename = `${payload.property_id}_${now}.jpg`;
-    let dir = '/var/www/downloads.orunmila.life/html/spider/properties/';
+    let dir = '/var/www/photos.spider.com.ng/html/spider/properties/';
 
     let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
     let binaryData = Buffer.from(base64Data, 'base64');
@@ -99,7 +99,7 @@ let propertyRecord = {
           'property_photos': {
             'title': payload.title,
             'snapshot_position': payload.snapshot_position,
-            'url': 'https://storage.orunmila.life/spider/properties/' + filename,
+            'url': 'https://photos.spider.com.ng/spider/properties/' + filename,
             'location': payload.location
           }
         }

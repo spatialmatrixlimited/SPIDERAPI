@@ -73,7 +73,7 @@ let streetRecord = {
     let now = new Date().getTime();
     let data = payload.photo;
     let filename = `${payload.street_id}-${now}.jpg`;
-    let dir = '/var/www/downloads.orunmila.life/html/spider/streets/';
+    let dir = '/var/www/photos.spider.com.ng/html/spider/streets/';
 
     let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
     let binaryData = Buffer.from(base64Data, 'base64');
@@ -88,7 +88,7 @@ let streetRecord = {
           'street_photos': {
             'title': payload.title,
             'snapshot_position': payload.snapshot_position,
-            'url': 'https://storage.orunmila.life/spider/streets/' + filename,
+            'url': 'https://photos.spider.com.ng/spider/streets/' + filename,
             'location': payload.location
           }
         }

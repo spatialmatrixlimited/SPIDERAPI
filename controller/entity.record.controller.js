@@ -85,7 +85,7 @@ let entityRecord = {
     let now = new Date().getTime();
     let data = payload.photo;
     let filename = `${payload.entity_id}_${now}.jpg`;
-    let dir = '/var/www/downloads.orunmila.life/html/spider/entities/';
+    let dir = '/var/www/photos.spider.com.ng/html/spider/entities/';
 
     let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
     let binaryData = Buffer.from(base64Data, 'base64');
@@ -100,7 +100,7 @@ let entityRecord = {
           'property_photos': {
             'title': payload.title,
             'snapshot_position': payload.snapshot_position,
-            'url': 'https://storage.orunmila.life/spider/entities/' + filename,
+            'url': 'https://photos.spider.com.ng/spider/entities/' + filename,
             'location': payload.location
           }
         }
@@ -127,14 +127,14 @@ let entityRecord = {
   },
 
   processEntityImage: (req, res) => {
-    const baseURL = '/var/www/downloads.orunmila.life/html/spider/entities/';
+    const baseURL = '/var/www/photos.spider.com.ng/html/spider/entities/';
     let filename = req.body.filename;
     imageProcessor(`${baseURL}${filename}`).then(response => {
       res.json({
         success: true,
         message: 'Operation successful!',
         result: {
-          url: `https://storage.orunmila.life/spider/entities/${filename}`
+          url: `https://photos.spider.com.ng/spider/entities/${filename}`
         }
       });
     }).catch(err => {
