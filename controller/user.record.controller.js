@@ -1,0 +1,248 @@
+//Database Model
+let User = require('../model/user.model');
+
+//App Library
+let hashMe = require('../lib/cryptic');
+let makeCase = require('../lib/stringagent');
+let imageProcessor = require('./image.processor');
+
+//Other Library
+let fs = require('fs');
+
+let userRecord = {
+
+  //update user - push notification player id
+  patchUserPlayerId: (req, res) => {
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'playerid': req.body.playerid
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+ 
+  //update user - password
+  patchUserSecurity: (req, res) => {
+    var hashed = hashMe.saltHashPassword(req.body.password);
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'security.accesscode': hashed.salt,
+        'security.accesskey': hashed.hash
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+  //update user - role
+  patchUser: (req, res) => {
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'personal.mobile': req.body.mobile,
+        'security.is_active': req.body.is_active,
+        'security.role': req.body.role,
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+  //delete user - disable user
+  deleteUser: (req, res) => {
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'documentstatus': 0
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+  //update user - avatar (mobile)
+  patchAvatar: (req, res) => {
+    var now = new Date();
+    var data = req.body.profileimage;
+    var filename = `${req.body.id }_${now}.jpg`;
+    var dir = '/var/www/downloads.femalehire.com/cloud/images/';
+
+    var base64Data = data.replace(/^data:image\/\w+;base64,/, "");
+    var binaryData = Buffer.from(base64Data, 'base64');
+
+    var wstream = fs.createWriteStream(dir + filename);
+    wstream.on('finish', () => {
+      imageProcessor(`${dir}${filename}`);
+      User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'personal.avatar': 'https://downloads.femalehire.com/cloud/images/' + filename,
+        'last_seen': new Date()
+
+      }, {
+        new: true
+      }).exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+    });
+    wstream.write(binaryData);
+    wstream.end();
+  },
+
+  processAvatar: (req, res) => {
+    const baseURL = '/var/www/downloads.femalehire.com/cloud/images/';
+    let filename = req.body.filename;
+    imageProcessor(`${baseURL}${filename}`).then(response => {
+      res.json({
+        success: true,
+        message: 'Operation successful!',
+        result: {
+          url: `https://downloads.femalehire.com/cloud/images/${filename}`
+        }
+      });
+    }).catch(err => {
+      console.error(err);
+    });
+  },
+
+  // Get all users
+  getUsers: (req, res) => {
+    var pagesize = req.params.limit;
+    var skipby = req.params.start;
+    User.find({
+        'documentstatus': 1
+      }, (err, data) => {
+        if (err) {
+          res.json({
+            result: []
+          });
+        } else {
+          return res.json({
+            result: data
+          });
+        }
+      }).sort({
+        'last_seen': -1
+      }).limit(parseInt(pagesize))
+      .skip(parseInt(skipby));
+  },
+
+
+  // Get user (single)
+  getUser: (req, res) => {
+    User.find({
+      '_id': req.params.id
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          result: []
+        });
+      } else {
+        return res.json({
+          result: data
+        });
+      }
+    });
+  },
+
+  //verifyUser
+  verifyUser: (req, res) => {
+    console.log(req.params);
+    User.findOne({
+      'personal.email': req.params.email
+    }, (err, data) => {
+      if (err) {
+        //res.status(404).send({success: false});
+        return res.json({
+          success: false
+        });
+      } else {
+        if (data) {
+          //res.status(200).send({success: true, data: data});
+          return res.json({
+            success: true
+          });
+        } else {
+          //res.status(404).send({success: false});
+          return res.json({
+            success: false
+          });
+        }
+
+      }
+    });
+  }
+}
+
+module.exports = userRecord;
