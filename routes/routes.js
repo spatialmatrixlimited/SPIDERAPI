@@ -11,7 +11,7 @@ const oracle = require('../controller/oracle.controller');
 const app = express();
 
 router.post('/authenticate', auth.authenticateUser); //authenticate user
-router.post('/authenticate/organisation', auth.authenticateUser); //authenticate organisation user
+router.post('/authenticate/organisation', auth.authenticateOrganisationUser); //authenticate organisation user
 router.post('/user', registration.addUser); //add new user
 router.post('/organisation', registration.addOrganisationUser); //add new organisation user
 router.post('/street', streetRecord.addNewStreet); //add new street data
