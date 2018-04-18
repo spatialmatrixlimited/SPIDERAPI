@@ -24,15 +24,6 @@ let registration = {
   //Add a new user
   addUser: (req, res) => {
     let payload = req.body;
-    /* let payload = {
-      firstname: 'Kola',
-      lastname: 'Grey',
-      email: 'kolagrey@gmail.com',
-      role: 'Admin',
-      mobile: '07060694202',
-      oneid: '',
-      password: '123456'
-    } */
     if ((!payload.firstname) || (!payload.lastname) || (!payload.password) || (!payload.email)) {
       res.json({
         success: false,
@@ -42,6 +33,7 @@ let registration = {
     } else {
       let hashed = hashMe.saltHashPassword(payload.password);
       let newUser = User({
+        'document_owner': payload.document_owner ? payload.document_owner : '',
         'personal': {
           'firstname': makeCase.titleCase(payload.firstname),
           'lastname': makeCase.titleCase(payload.lastname),
@@ -67,6 +59,64 @@ let registration = {
             firstname: makeCase.titleCase(payload.firstname),
             email: payload.email,
             title: `Hello ${makeCase.titleCase(payload.firstname)}, Welcome to SPiDER by Mobiforce`
+          };
+          jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
+
+          return res.json({
+            success: true,
+            message: 'Authenticated!',
+            token: sessionToken,
+            result: data
+          });
+
+        }, (err) => {
+          res.json({
+            success: false,
+            message: 'Failed to create profile!',
+            token: '',
+            result: {}
+          });
+        });
+    }
+  },
+
+  //Add a new organisation user
+  addOrganisationUser: (req, res) => {
+    let payload = req.body;
+    if ((!payload.firstname) || (!payload.lastname) || (!payload.password) || (!payload.email)) {
+      res.json({
+        success: false,
+        message: 'Fill in all fields!',
+        result: {}
+      });
+    } else {
+      let hashed = hashMe.saltHashPassword(payload.password);
+      let newUser = User({
+        'document_owner': payload.document_owner ? payload.document_owner : '',
+        'organisation': {
+          'name': makeCase.titleCase(payload.organisation),
+          'email': payload.email,
+          'mobile': payload.mobile
+        },
+        'security': {
+          'role': payload.role,
+          'accesscode': hashed.salt,
+          'accesskey': hashed.hash
+        },
+        'playerid': payload.oneid ? payload.oneid : '',
+        'created_on': today
+      });
+      newUser.save().then(
+        (data) => {
+          console.log(data);
+          let sessionToken = jwt.sign(data._id, asset.secret, {
+            expiresIn: 60 * 60 * 24
+          });
+          //send welcome email
+          let welcomePayload = {
+            firstname: makeCase.titleCase(payload.organisation),
+            email: payload.email,
+            title: `Hello ${makeCase.titleCase(payload.organisation)}, Welcome to SPiDER by Mobiforce`
           };
           jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
 

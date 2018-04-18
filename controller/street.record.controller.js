@@ -18,6 +18,7 @@ let streetRecord = {
     console.log(payload);
 
     let newRecord = new StreetRecord({
+      document_owner: payload.document_owner ? payload.document_owner : '',
       street: payload.street,
       contact: payload.contact,
       location: payload.location,
@@ -158,12 +159,17 @@ let streetRecord = {
       .skip(parseInt(skipby));
   },
 
-
-  // Get all streets by specific user
-  getStreetsByUser: (req, res) => {
+  // Search all streets by Organisation
+  searchOrganisationStreets: (req, res) => {
+    let pagesize = req.params.limit;
+    let skipby = req.params.start;
+    let search = req.params.search;
     StreetRecord.find({
         'document_status': 1,
-        'enumerator.id': req.params.id
+        'document_owner': req.params.owner,
+        'street.street_name': {
+          '$regex': new RegExp(search, "i")
+        }
       }, (err, data) => {
         if (err) {
           res.json({
@@ -178,7 +184,31 @@ let streetRecord = {
         }
       }).sort({
         'created': -1
-      });
+      }).limit(parseInt(pagesize))
+      .skip(parseInt(skipby));
+  },
+
+
+  // Get all streets by specific user
+  getStreetsByUser: (req, res) => {
+    StreetRecord.find({
+      'document_status': 1,
+      'enumerator.id': req.params.id
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
   },
 
 
@@ -230,6 +260,28 @@ let streetRecord = {
   getAllStreets: (req, res) => {
     StreetRecord.find({
       'document_status': 1
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
+  },
+
+  //get all streets - Organisation
+  getOrganisationStreets: (req, res) => {
+    StreetRecord.find({
+      'document_status': 1,
+      'document_owner': req.params.owner
     }, (err, data) => {
       if (err) {
         res.json({

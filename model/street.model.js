@@ -3,6 +3,10 @@ var StreetSchema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var streetSchema = new StreetSchema({
+    document_owner: {
+        type: ObjectId,
+        ref: 'User'
+    },
     street: {
         gis_id: String,
         street_id: {
@@ -80,7 +84,10 @@ var streetSchema = new StreetSchema({
         email: String,
         mobile: String
     },
-    properties: { type: Number, default: 0 }
+    properties: {
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = mongoose.model('StreetRecord', streetSchema, 'streets');

@@ -36,7 +36,7 @@ let userRecord = {
         }
       });
   },
- 
+
   //update user - password
   patchUserSecurity: (req, res) => {
     var hashed = hashMe.saltHashPassword(req.body.password);
@@ -71,6 +71,34 @@ let userRecord = {
         '_id': req.body.id
       }, {
         'personal.mobile': req.body.mobile,
+        'security.is_active': req.body.is_active,
+        'security.role': req.body.role,
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+   //update organisation user - role
+   patchOrganisationUser: (req, res) => {
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'organisation.mobile': req.body.mobile,
         'security.is_active': req.body.is_active,
         'security.role': req.body.role,
       }, {
@@ -135,7 +163,7 @@ let userRecord = {
       User.findOneAndUpdate({
         '_id': req.body.id
       }, {
-        'personal.avatar': 'https://photos.spider.com.ng/cloud/images/' + filename,
+        'avatar': 'https://photos.spider.com.ng/cloud/images/' + filename,
         'last_seen': new Date()
 
       }, {
@@ -178,24 +206,41 @@ let userRecord = {
 
   // Get all users
   getUsers: (req, res) => {
-    var pagesize = req.params.limit;
-    var skipby = req.params.start;
     User.find({
-        'documentstatus': 1
-      }, (err, data) => {
-        if (err) {
-          res.json({
-            result: []
-          });
-        } else {
-          return res.json({
-            result: data
-          });
-        }
-      }).sort({
-        'last_seen': -1
-      }).limit(parseInt(pagesize))
-      .skip(parseInt(skipby));
+      'documentstatus': 1
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          result: []
+        });
+      } else {
+        return res.json({
+          result: data
+        });
+      }
+    }).sort({
+      'last_seen': -1
+    });
+  },
+
+  // Get all users for organisation
+  getOrganisationUsers: (req, res) => {
+    User.find({
+      'documentstatus': 1,
+      'document_owner': req.params.owner
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          result: []
+        });
+      } else {
+        return res.json({
+          result: data
+        });
+      }
+    }).sort({
+      'last_seen': -1
+    });
   },
 
 
@@ -242,7 +287,37 @@ let userRecord = {
 
       }
     });
+  },
+
+  //verify Organisation User
+  verifyOrganisation: (req, res) => {
+    console.log(req.params);
+    User.findOne({
+      'organisation.email': req.params.email
+    }, (err, data) => {
+      if (err) {
+        //res.status(404).send({success: false});
+        return res.json({
+          success: false
+        });
+      } else {
+        if (data) {
+          //res.status(200).send({success: true, data: data});
+          return res.json({
+            success: true
+          });
+        } else {
+          //res.status(404).send({success: false});
+          return res.json({
+            success: false
+          });
+        }
+
+      }
+    });
   }
+
+
 }
 
 module.exports = userRecord;

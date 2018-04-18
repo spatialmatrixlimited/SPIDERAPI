@@ -13,6 +13,7 @@ let propertyRecord = {
   addNewProperty: (req, res) => {
     let payload = req.body;
     let newRecord = new PropertyRecord({
+      document_owner: payload.document_owner ? payload.document_owner : '',
       property: payload.property,
       contact: payload.contact,
       location: payload.location,
@@ -224,6 +225,28 @@ let propertyRecord = {
       'created': -1
     });
   },
+
+  // Get all properties - Organisations
+  getOrganisationProperties: (req, res) => {
+    PropertyRecord.find({
+      'document_status': 1,
+      'document_owner': req.params.owner
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
+  }
 
 }
 

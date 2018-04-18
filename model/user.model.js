@@ -1,8 +1,16 @@
 var mongoose = require('mongoose');
 var UserSchema = mongoose.Schema;
-
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var userSchema = new UserSchema({
+  document_owner: {
+    type: ObjectId,
+    ref: 'User'
+  },
   playerid: {
+    type: String,
+    default: ''
+  },
+  avatar: {
     type: String,
     default: ''
   },
@@ -23,25 +31,41 @@ var userSchema = new UserSchema({
       type: String,
       default: ''
     },
-    avatar: {
+    gender: {
+      type: String,
+      default: ''
+    }
+  },
+  organisation: {
+    name: {
       type: String,
       default: ''
     },
-    gender: {
+    email: {
+      type: String,
+      lowercase: true
+    },
+    mobile: {
       type: String,
       default: ''
     }
   },
   security: {
     role: String,
-    is_active: { type: Boolean, default: true },
+    is_active: {
+      type: Boolean,
+      default: true
+    },
     accesskey: String,
     accesscode: String
   },
   conversations: [{
     with: String,
     conversationId: String,
-    created_on: { type: Date, default: Date.now }
+    created_on: {
+      type: Date,
+      default: Date.now
+    }
   }],
   documentstatus: {
     type: Number,
