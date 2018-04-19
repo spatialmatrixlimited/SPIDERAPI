@@ -41,6 +41,7 @@ let registration = {
           'mobile': payload.mobile
         },
         'security': {
+          'user_type': payload.user_type ? payload.user_type : 'Individual',
           'role': payload.role,
           'accesscode': hashed.salt,
           'accesskey': hashed.hash
@@ -99,6 +100,7 @@ let registration = {
           'mobile': payload.mobile
         },
         'security': {
+          'user_type': payload.user_type ? payload.user_type : 'Individual',
           'role': payload.role,
           'accesscode': hashed.salt,
           'accesskey': hashed.hash

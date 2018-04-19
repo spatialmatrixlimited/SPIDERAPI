@@ -51,6 +51,7 @@ var userSchema = new UserSchema({
     }
   },
   security: {
+    user_type: { type: String, default: 'Individual' },
     role: String,
     is_active: {
       type: Boolean,
