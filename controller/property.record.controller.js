@@ -246,6 +246,28 @@ let propertyRecord = {
     }).sort({
       'created': -1
     });
+  },
+
+  // Get all properties - Individual
+  getIndividualProperties: (req, res) => {
+    PropertyRecord.find({
+      'document_status': 1,
+      'document_owner': req.params.owner
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
   }
 
 }

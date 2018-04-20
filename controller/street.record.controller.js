@@ -297,6 +297,28 @@ let streetRecord = {
     }).sort({
       'created': -1
     });
+  },
+
+   //get all streets - Individual
+   getIndividualStreets: (req, res) => {
+    StreetRecord.find({
+      'document_status': 1,
+      'document_owner': req.params.owner
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
   }
 
 }
