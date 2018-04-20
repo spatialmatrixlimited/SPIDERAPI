@@ -26,7 +26,7 @@ router.get('/current/version/:app', oracle.getCurrentVersion); //get app current
 
 router.get('/user/:id', userRecord.getUser); //single user data
 router.get('/users', userRecord.getUsers); //all users data
-router.get('/users/:owner', userRecord.getOrganisationUsers); //all users data for organisation
+router.get('/organisation/users/:owner', userRecord.getOrganisationUsers); //all users data for organisation
 router.get('/verify/:email', userRecord.verifyUser); // verify user
 router.get('/verify/organisation/:email', userRecord.verifyOrganisation); // verify organisation
 
