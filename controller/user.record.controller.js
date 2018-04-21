@@ -65,11 +65,14 @@ let userRecord = {
       });
   },
 
-  //update user - role
+  //update user 
   patchUser: (req, res) => {
+    console.log(req.body);
     User.findOneAndUpdate({
         '_id': req.body.id
       }, {
+        'personal.firstname': req.body.firstname,
+        'personalal.lastname': req.body.lastname,
         'personal.mobile': req.body.mobile,
         'security.is_active': req.body.is_active,
         'security.role': req.body.role,
@@ -93,11 +96,13 @@ let userRecord = {
       });
   },
 
-   //update organisation user - role
+   //update organisation user
    patchOrganisationUser: (req, res) => {
+     console.log(req.body);
     User.findOneAndUpdate({
         '_id': req.body.id
       }, {
+        'organisation.name': req.body.organisation,
         'organisation.mobile': req.body.mobile,
         'security.is_active': req.body.is_active,
         'security.role': req.body.role,
