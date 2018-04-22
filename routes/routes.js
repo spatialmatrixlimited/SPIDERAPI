@@ -60,8 +60,9 @@ router.patch('/user/avatar', userRecord.patchAvatar); //update user avatar
 router.patch('/user/onesignal', userRecord.patchUserPlayerId); //update user OneSignal Player ID
 router.patch('/user/security', userRecord.patchUserSecurity); //update user password
 
-//router.patch('/street', streetRecord.patchStreet); //update street data
-//router.patch('/property', propertyRecord.patchProperty); //update property data
+router.patch('/street', streetRecord.patchStreet); //update street data
+router.patch('/property', propertyRecord.patchProperty); //update property data
+router.patch('/entity', entityRecord.patchEntity); //update entity data
 
 router.patch('/street/photo', streetRecord.patchStreetPhoto); //update street photo
 router.patch('/property/photo', propertyRecord.patchPropertyPhoto); //update property photo

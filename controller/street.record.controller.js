@@ -115,6 +115,36 @@ let streetRecord = {
     wstream.end();
   },
 
+  //update street record
+  patchStreet: (req, res) => {
+    let payload = req.body;
+    StreetRecord.findOneAndUpdate({
+        '_id': payload.id
+      }, {
+        'street': payload.street,
+        'modified_by': payload.modified_by,
+        'modified': new Date()
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+  //update street image
   processStreetImage: (req, res) => {
     const baseURL = '/var/www/downloads.femalehire.com/cloud/images/';
     let filename = req.body.filename;
@@ -299,8 +329,8 @@ let streetRecord = {
     });
   },
 
-   //get all streets - Individual
-   getIndividualStreets: (req, res) => {
+  //get all streets - Individual
+  getIndividualStreets: (req, res) => {
     StreetRecord.find({
       'document_status': 1,
       'document_owner': req.params.owner

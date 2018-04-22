@@ -52,6 +52,37 @@ let entityRecord = {
     });
   },
 
+  //update entity record
+  patchEntity: (req, res) => {
+    let payload = req.body;
+    EntityRecord.findOneAndUpdate({
+        '_id': payload.id
+      }, {
+        'entity': payload.entity,
+        'contact': payload.contact,
+        'modified_by': payload.modified_by,
+        'modified': new Date()
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
+
   //delete entity - disbable entity
   deleteEntity: (req, res) => {
     EntityRecord.findOneAndUpdate({
