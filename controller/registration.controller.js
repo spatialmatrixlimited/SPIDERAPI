@@ -40,7 +40,7 @@ let registration = {
           'email': payload.email,
           'mobile': payload.mobile
         },
-        'organisation.name': makeCase.titleCase(payload.organisation),
+        'organisation.name': payload.organisation ? makeCase.titleCase(payload.organisation) : '',
         'security': {
           'user_type': payload.user_type ? payload.user_type : 'Individual',
           'role': payload.role,
