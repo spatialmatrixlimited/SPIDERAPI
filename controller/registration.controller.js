@@ -54,7 +54,6 @@ let registration = {
       });
       newUser.save().then(
         (data) => {
-          console.log(data);
           let sessionToken = jwt.sign(data._id, asset.secret, {
             expiresIn: 60 * 60 * 24
           });
@@ -117,7 +116,6 @@ let registration = {
       });
       newUser.save().then(
         (data) => {
-          console.log(data);
           let sessionToken = jwt.sign(data._id, asset.secret, {
             expiresIn: 60 * 60 * 24
           });
