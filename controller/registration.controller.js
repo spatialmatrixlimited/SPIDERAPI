@@ -41,7 +41,7 @@ let registration = {
           'mobile': payload.mobile
         },
         'organisation': {
-          name: payload.organisation
+          name: makeCase.titleCase(payload.organisation)
         },
         'security': {
           'user_type': payload.user_type ? payload.user_type : 'Individual',
@@ -87,7 +87,7 @@ let registration = {
   //Add a new organisation user
   addOrganisationUser: (req, res) => {
     let payload = req.body;
-    if ((!payload.firstname) || (!payload.lastname) || (!payload.password) || (!payload.email)) {
+    if ((!payload.organisation) || (!payload.password) || (!payload.email)) {
       res.json({
         success: false,
         message: 'Fill in all fields!',
@@ -98,8 +98,8 @@ let registration = {
       let newUser = User({
         'document_owner': payload.document_owner ? payload.document_owner : '',
         'personal': {
-          'firstname': payload.firstname,
-          'lastname': payload.lastname
+          'firstname': makeCase.titleCase(payload.firstname),
+          'lastname': makeCase.titleCase(payload.lastname)
         },
         'organisation': {
           'name': makeCase.titleCase(payload.organisation),
