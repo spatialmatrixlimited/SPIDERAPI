@@ -40,6 +40,9 @@ let registration = {
           'email': payload.email,
           'mobile': payload.mobile
         },
+        'organisation': {
+          name: payload.organisation
+        },
         'security': {
           'user_type': payload.user_type ? payload.user_type : 'Individual',
           'role': payload.role,
@@ -94,13 +97,17 @@ let registration = {
       let hashed = hashMe.saltHashPassword(payload.password);
       let newUser = User({
         'document_owner': payload.document_owner ? payload.document_owner : '',
+        'personal': {
+          'firstname': payload.firstname,
+          'lastname': payload.lastname
+        },
         'organisation': {
           'name': makeCase.titleCase(payload.organisation),
           'email': payload.email,
           'mobile': payload.mobile
         },
         'security': {
-          'user_type': payload.user_type ? payload.user_type : 'Individual',
+          'user_type': payload.user_type ? payload.user_type : 'Organisation',
           'role': payload.role,
           'accesscode': hashed.salt,
           'accesskey': hashed.hash
