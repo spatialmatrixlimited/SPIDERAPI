@@ -131,7 +131,6 @@ let registration = {
           });
 
         }, (err) => {
-          console.error(err);
           res.json({
             success: false,
             message: 'Failed to create profile!',
