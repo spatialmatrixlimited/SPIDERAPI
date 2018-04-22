@@ -33,7 +33,7 @@ let registration = {
     } else {
       let hashed = hashMe.saltHashPassword(payload.password);
       let newUser = User({
-        'document_owner': payload.document_owner ? payload.document_owner : '',
+        'document_owner': payload.document_owner ? payload.document_owner : '5ad89d5642157b14210eaf25',
         'personal': {
           'firstname': makeCase.titleCase(payload.firstname),
           'lastname': makeCase.titleCase(payload.lastname),
@@ -93,7 +93,7 @@ let registration = {
     } else {
       let hashed = hashMe.saltHashPassword(payload.password);
       let newUser = User({
-        'document_owner': payload.document_owner ? payload.document_owner : '',
+        'document_owner': payload.document_owner ? payload.document_owner : '5ad89d5642157b14210eaf25',
         'personal.firstname': makeCase.titleCase(payload.firstname),
         'personal.lastname': makeCase.titleCase(payload.lastname),
         'organisation': {
