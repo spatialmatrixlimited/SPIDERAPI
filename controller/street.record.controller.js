@@ -130,15 +130,11 @@ let streetRecord = {
       .exec((err, data) => {
         if (err) {
           res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
+            success: false
           });
         } else {
           res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
+            success: true
           });
         }
       });
