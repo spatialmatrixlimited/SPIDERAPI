@@ -86,7 +86,7 @@ let propertyRecord = {
     PropertyRecord.findOneAndUpdate({
         '_id': req.body.id
       }, {
-        'documentstatus': 0
+        'document_status': 0
       })
       .exec((err, data) => {
         if (err) {
