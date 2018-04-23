@@ -90,7 +90,6 @@ let propertyRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          console.error(err);
           res.json({
             success: false
           });
