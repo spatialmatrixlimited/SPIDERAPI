@@ -58,6 +58,7 @@ let propertyRecord = {
         }, {
           'property': payload.property,
           'modified_by': payload.modified_by,
+          'contact': payload.contact,
           'modified': new Date()
         }, {
           new: true
