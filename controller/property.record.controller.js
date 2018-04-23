@@ -200,7 +200,8 @@ let propertyRecord = {
   //Get all properties for a street
   getPropertiesByStreet: (req, res) => {
     PropertyRecord.find({
-      'property.street_id': req.params.id
+      'property.street_id': req.params.id,
+      'document_status': 1
     }, (err, data) => {
       if (err) {
         res.json({
