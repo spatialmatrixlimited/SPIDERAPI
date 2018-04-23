@@ -50,41 +50,41 @@ let propertyRecord = {
     });
   },
 
-    //update property record
-    patchProperty: (req, res) => {
-      let payload = req.body;
-      PropertyRecord.findOneAndUpdate({
-          '_id': payload.id
-        }, {
-          'property': payload.property,
-          'modified_by': payload.modified_by,
-          'contact': payload.contact,
-          'modified': new Date()
-        }, {
-          new: true
-        })
-        .exec((err, data) => {
-          if (err) {
-            res.json({
-              success: false,
-              message: 'Operation failed!',
-              result: {}
-            });
-          } else {
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: data
-            });
-          }
-        });
-    },
-  
+  //update property record
+  patchProperty: (req, res) => {
+    let payload = req.body;
+    PropertyRecord.findOneAndUpdate({
+        '_id': payload.id
+      }, {
+        'property': payload.property,
+        'modified_by': payload.modified_by,
+        'contact': payload.contact,
+        'modified': new Date()
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
 
   //delete property - disbable property
   deleteProperty: (req, res) => {
     PropertyRecord.findOneAndUpdate({
-        '_id': req.params.id
+        '_id': req.body.id
       }, {
         'documentstatus': 0
       })

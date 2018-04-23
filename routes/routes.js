@@ -68,8 +68,8 @@ router.patch('/street/photo', streetRecord.patchStreetPhoto); //update street ph
 router.patch('/property/photo', propertyRecord.patchPropertyPhoto); //update property photo
 router.patch('/entity/photo', entityRecord.patchEntityPhoto); //update property entity photo
 
-router.delete('/user/:id', userRecord.deleteUser); //update new user
-router.delete('/street/:id', streetRecord.deleteStreet); //update street data
-router.delete('/property/:id', propertyRecord.deleteProperty); //update property data
+router.patch('/remove/user', userRecord.deleteUser); //delete user
+router.patch('/remove/street', streetRecord.deleteStreet); //delete street record
+router.patch('/remove/property', propertyRecord.deleteProperty); //delete property record
 
 module.exports = router;

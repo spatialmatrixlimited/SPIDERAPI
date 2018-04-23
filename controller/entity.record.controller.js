@@ -86,7 +86,7 @@ let entityRecord = {
   //delete entity - disbable entity
   deleteEntity: (req, res) => {
     EntityRecord.findOneAndUpdate({
-        '_id': req.params.id
+        '_id': req.body.id
       }, {
         'documentstatus': 0
       })
