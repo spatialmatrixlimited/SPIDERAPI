@@ -126,7 +126,7 @@ let entityRecord = {
     wstream.on('finish', () => {
       imageProcessor(`${dir}${filename}`);
       EntityRecord.findOneAndUpdate({
-        'property_id': payload.property_id
+        'entity.entity_id': payload.entity_id
       }, {
         '$push': {
           'property_photos': {

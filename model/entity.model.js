@@ -12,6 +12,7 @@ var entitySchema = new EntitySchema({
         index: true
     },
     entity: {
+        entity_id: String,
         entity_name: String,
         entity_group: String,
         entity_category: String,
