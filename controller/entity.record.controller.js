@@ -14,7 +14,7 @@ let entityRecord = {
   addNewEntity: (req, res) => {
     let payload = req.body;
     let newRecord = new EntityRecord({
-      document_owner: payload.document_owner ? payload.document_owner : '',
+      document_owner: payload.document_owner,
       property_id: payload.property_id,
       entity: payload.entity,
       contact: payload.contact,

@@ -13,7 +13,7 @@ let propertyRecord = {
   addNewProperty: (req, res) => {
     let payload = req.body;
     let newRecord = new PropertyRecord({
-      document_owner: payload.document_owner ? payload.document_owner : '',
+      document_owner: payload.document_owner,
       property: payload.property,
       contact: payload.contact,
       location: payload.location,

@@ -15,12 +15,9 @@ let streetRecord = {
   addNewStreet: (req, res) => {
     let payload = req.body;
 
-    console.log(payload);
-
     let newRecord = new StreetRecord({
-      document_owner: payload.document_owner ? payload.document_owner : '',
+      document_owner: payload.document_owner,
       street: payload.street,
-      contact: payload.contact,
       location: payload.location,
       enumerator: payload.enumerator,
       document_status: 1,
@@ -70,7 +67,6 @@ let streetRecord = {
   //update street photo via mobile device
   patchStreetPhoto: (req, res) => {
     let payload = req.body;
-    console.log(payload);
     let now = new Date().getTime();
     let data = payload.photo;
     let filename = `${payload.street_id}-${now}.jpg`;
