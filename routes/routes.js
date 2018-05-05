@@ -19,7 +19,7 @@ router.post('/property', propertyRecord.addNewProperty); //add new property data
 router.post('/entity', entityRecord.addNewEntity); //add new property entity data
 
 //router.get('/analytics', oracle.getAnalytics);
-
+router.get('/w3w/engine/start', oracle.w3wEngineStart); //w3w Engine Start
 router.get('/make/love/:code', oracle.generateLove); //make love
 router.get('/headers', oracle.generateHeaders); //generate headers
 router.get('/current/version/:app', oracle.getCurrentVersion); //get app current version
