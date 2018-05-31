@@ -57,7 +57,7 @@ var userSchema = new UserSchema({
     role: String,
     is_active: {
       type: Boolean,
-      default: true
+      default: false
     },
     accesskey: String,
     accesscode: String
