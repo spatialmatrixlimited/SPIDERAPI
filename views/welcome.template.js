@@ -239,7 +239,7 @@ var welcomeTemplate = (payload) => {
                     <table cellpadding="0" cellspacing="0" width="600" class="w320">
                       <tr>
                         <td class="pull-left mobile-header-padding-left" style="vertical-align: middle;">
-                          <a href=""><img height="60" src="https://gis.asheori.com/images/header.png" alt="logo"></a>
+                          <a href=""><img height="60" src="https://admin.spider.com.ng/assets/icon/favicon.png" alt="logo"></a>
                         </td>
                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
                           &nbsp;  
@@ -287,33 +287,16 @@ var welcomeTemplate = (payload) => {
                   <![endif]-->
                   <h3>Account Verification Link</h3>
                   <p>
-                    <a href="https://verification.gis.asheori.com/validate/talent/email/${payload.email}">https://verification.gis.asheori.com/validate/talent/email/${payload.email}</a>
+                    <a href="https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}">https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}</a>
                     
                   </p>
                   <p>
-                    <a class="button-mobile" href="https://verification.gis.asheori.com/validate/talent/email/${payload.email}"
+                    <a class="button-mobile" href="https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}"
                     style="background-color:rgb(2, 3, 22);border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">Verify My Email</a>
                  
                   </p>
     
                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td align="center" valign="top" width="100%" style="background-color: #FFFFFF; height: 100px;">
-                  <center>
-                  <table cellspacing="0" cellpadding="0" width="600" class="w320">
-                  <tr>
-                    <td style="padding: 25px 0 25px">
-                      <h3>Download SPiDER by Mobiforce App for Field Agents</h3>
-                      <p>
-                      <a href="https://play.google.com/store/apps/details?id=com.enthr.talents"><img height="50" src="https://toughtourers.org/assets/icon/play-store.png" alt="logo"></a>
-
-                      </p>
-                    </td>
-                  </tr>
-                </table> 
-                  </center>
                 </td>
               </tr>
             </table>

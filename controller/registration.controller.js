@@ -59,6 +59,7 @@ let registration = {
           let welcomePayload = {
             firstname: makeCase.titleCase(payload.firstname),
             email: payload.email,
+            user_type: payload.user_type.toLowerCase(),
             title: `Hello ${makeCase.titleCase(payload.firstname)}, Welcome to SPiDER by Mobiforce`
           };
           jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));

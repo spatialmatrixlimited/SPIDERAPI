@@ -21,7 +21,7 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 var morgan = require('morgan');
 var analytical = require('./middleware/analytical')
-var w3wEngine = require('./controller/w3w.engine.controller');
+//var w3wEngine = require('./controller/w3w.engine.controller');
 var port = process.env.PORT || 5110;
 
 mongoose.Promise = global.Promise;
@@ -84,11 +84,11 @@ app.listen(port, function () {
     console.log('GIS API Server is running on port ' + port);
 });
 
-let w3wInterval = setInterval(()=>{
+/* let w3wInterval = setInterval(()=>{
     w3wEngine.processStreet();
     w3wEngine.processProperty();
     w3wEngine.processEntity();
-},(15 * (60 * 1000)));
+},(15 * (60 * 1000))); */
 
 mongoose.connection.on('open', function () {
     console.log('GIS Database is connected');
