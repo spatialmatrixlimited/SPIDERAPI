@@ -263,7 +263,7 @@ var passwordNotifyTemplate = (payload) => {
             <table cellspacing="0" cellpadding="0" width="600" class="w320">
               <tr>
                 <td class="header-lg">
-                  Account Notification - SPiDER by Mobiforce
+                  SPiDER by Mobiforce<br>Account Notification
                 </td>
               </tr>
               <tr>
