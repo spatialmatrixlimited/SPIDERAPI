@@ -5,6 +5,9 @@ let User = require('../model/user.model');
 let hashMe = require('../lib/cryptic');
 let makeCase = require('../lib/stringagent');
 let imageProcessor = require('./image.processor');
+
+//eMail Notification
+let jet = require('./mailjet.controller');
 let accountNotification = require('../views/password.notify.template');
 
 //Other Library
