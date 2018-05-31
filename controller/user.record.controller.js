@@ -40,7 +40,7 @@ let userRecord = {
 
   //update user - password
   patchUserSecurity: (req, res) => {
-    let paylod = req.body.password;
+    let payload = req.body;
     var hashed = hashMe.saltHashPassword(payload.password);
     User.findOneAndUpdate({
         '_id': payload.id
