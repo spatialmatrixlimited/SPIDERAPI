@@ -5,6 +5,7 @@ let User = require('../model/user.model');
 let hashMe = require('../lib/cryptic');
 let makeCase = require('../lib/stringagent');
 let imageProcessor = require('./image.processor');
+let accountNotification = require('../views/password.notify.template');
 
 //Other Library
 let fs = require('fs');
@@ -56,6 +57,15 @@ let userRecord = {
             result: {}
           });
         } else {
+           //send welcome email
+           let notificationPayload = {
+            firstname: makeCase.titleCase(payload.firstname),
+            email: payload.email,
+            new_password: req.body.password,
+            title: `Hello ${makeCase.titleCase(payload.firstname)}, Account update on SPiDER by Mobiforce`
+          };
+          jet.mailJet(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
+
           res.json({
             success: true,
             message: 'Operation successful!',
