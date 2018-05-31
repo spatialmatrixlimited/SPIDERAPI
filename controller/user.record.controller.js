@@ -40,9 +40,10 @@ let userRecord = {
 
   //update user - password
   patchUserSecurity: (req, res) => {
-    var hashed = hashMe.saltHashPassword(req.body.password);
+    let paylod = req.body.password;
+    var hashed = hashMe.saltHashPassword(payload.password);
     User.findOneAndUpdate({
-        '_id': req.body.id
+        '_id': payload.id
       }, {
         'security.accesscode': hashed.salt,
         'security.accesskey': hashed.hash
@@ -59,10 +60,10 @@ let userRecord = {
         } else {
            //send welcome email
            let notificationPayload = {
-            firstname: makeCase.titleCase(payload.firstname),
-            email: payload.email,
-            new_password: req.body.password,
-            title: `Hello ${makeCase.titleCase(payload.firstname)}, Account update on SPiDER by Mobiforce`
+            firstname: makeCase.titleCase(data.personal.firstname),
+            email: data.personal.email,
+            new_password: payload.password,
+            title: `Hello ${makeCase.titleCase(data.personal.firstname)}, Account update on SPiDER by Mobiforce`
           };
           jet.mailJet(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
 
