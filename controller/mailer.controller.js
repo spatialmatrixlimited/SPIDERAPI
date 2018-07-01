@@ -15,7 +15,7 @@ const nodemailer = require('nodemailer');
      });
 
      let mailOptions = {
-         from: '"Asheori Mail Exchange" <mypeerexchange@gmail.com>', // sender address
+         from: '"SPiDER by Mobisoft" <mypeerexchange@gmail.com>', // sender address
          to: email, // list of receivers
          subject: title, // Subject line
          text: body, // plain text body
