@@ -8,6 +8,7 @@ let makeCase = require('../lib/stringagent');
 //eMail Notification
 let jet = require('./mailjet.controller');
 let userWelcome = require('../views/welcome.template');
+mailer = require('./mailer.controller');
 
 //Push Notification
 let push = require('./push.notification.controller');
@@ -62,7 +63,8 @@ let registration = {
             user_type: payload.user_type ? payload.user_type.toLowerCase() : 'individual',
             title: `Hello ${makeCase.titleCase(payload.firstname)}, Welcome to SPiDER by Mobiforce`
           };
-          jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
+          //jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
+          mailer(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
 
           return res.json({
             success: true,
@@ -122,7 +124,8 @@ let registration = {
             email: payload.email,
             title: `Hello ${makeCase.titleCase(payload.organisation)}, Welcome to SPiDER by Mobiforce`
           };
-          jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
+          //jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
+          mailer(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
 
           return res.json({
             success: true,

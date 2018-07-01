@@ -26,6 +26,7 @@
     "morgan": "^1.7.0",
     "multer": "^1.3.0",
     "node-mailjet": "^3.2.1",
+    "nodemailer": "^4.6.7",
     "onesignal": "^0.1.2",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",

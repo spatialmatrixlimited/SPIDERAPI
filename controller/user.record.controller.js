@@ -9,6 +9,7 @@ let imageProcessor = require('./image.processor');
 //eMail Notification
 let jet = require('./mailjet.controller');
 let accountNotification = require('../views/password.notify.template');
+let mailer = require('./mailer.controller');
 
 //Other Library
 let fs = require('fs');
@@ -68,7 +69,8 @@ let userRecord = {
             new_password: payload.password,
             title: `Hello ${makeCase.titleCase(data.personal.firstname)}, Account update on SPiDER by Mobiforce`
           };
-          jet.mailJet(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
+          //jet.mailJet(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
+          mailer(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
 
           res.json({
             success: true,
