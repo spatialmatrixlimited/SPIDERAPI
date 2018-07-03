@@ -25,10 +25,12 @@ const nodemailer = require('nodemailer');
      // send mail with defined transport object
      transporter.sendMail(mailOptions, (error, info) => {
          if (error) {
+             console.log('Error Occurred');
              console.log(error);
              //return {success : false,message : error};
 
          }
+         console.log('Message Sent');
          console.log('Message %s sent: %s', info.messageId, info.response);
          /*  var message = "Message: " + info.messageId + " Sent: " + info.response;
           res.json({success : true, message : message}); */
