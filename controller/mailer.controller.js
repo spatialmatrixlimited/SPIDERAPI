@@ -9,13 +9,13 @@ const nodemailer = require('nodemailer');
          port: 465,
          secure: true, // use SSL
          auth: {
-            user: 'mypeerexchange@gmail.com',
-            pass: 'PE.com2017@@'
+            user: 'spiderbymobisoft@gmail.com',
+            pass: 'spider2018@@'
          }
      });
 
      let mailOptions = {
-         from: '"SPiDER by Mobisoft" <mypeerexchange@gmail.com>', // sender address
+         from: '"SPiDER by Mobisoft" <spiderbymobisoft@gmail.com>', // sender address
          to: email, // list of receivers
          subject: title, // Subject line
          text: body, // plain text body
