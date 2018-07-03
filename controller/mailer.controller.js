@@ -40,7 +40,7 @@ const nodemailer = require('nodemailer');
  var mailjet = require ('node-mailjet')
  .connect(asset.MJPKSMTP, asset.MJSKSMTP);
 
- exports.module = (recepient, title, template)=>{
+ module.exports = (recepient, title, template)=>{
    var request = mailjet
        .post("send")
        .request({
