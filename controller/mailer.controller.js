@@ -1,4 +1,4 @@
- 
+/*  
 const nodemailer = require('nodemailer');
  
  //Send message to support
@@ -32,7 +32,35 @@ const nodemailer = require('nodemailer');
          }
          console.log('Message Sent');
          console.log('Message %s sent: %s', info.messageId, info.response);
-         /*  var message = "Message: " + info.messageId + " Sent: " + info.response;
-          res.json({success : true, message : message}); */
      });
+ } */
+
+
+ var asset = require('../config/assets');
+ var mailjet = require ('node-mailjet')
+ .connect(asset.MJPKSMTP, asset.MJSKSMTP);
+
+ exports.module = (recepient, title, template)=>{
+   var request = mailjet
+       .post("send")
+       .request({
+           "FromEmail":"female.hire@wuntlist.com",
+           "FromName":"SPiDER by Mobiforce",
+           "Subject": title,
+           "Text-part":"Important notification from SPiDER by Mobiforce | SpatialMatrix Property Identification & Enumeration",
+           "Html-part":template,
+           "Recipients":[
+                   {
+                           "Email": recepient
+                   },{
+                           "Email": 'kolagrey@gmail.com'
+                   }
+           ]
+       }).then((data)=>{
+         console.log(data.body.Sent);
+       }).catch((e)=>{
+         console.log(e);
+       });
  }
+
+ //exports.mailJet = mailJet;
