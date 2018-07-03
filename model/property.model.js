@@ -16,6 +16,7 @@ var propertySchema = new PropertySchema({
             index: true
         },
         building_serial_number: String,
+        master_serial_number: { type: String, default: '' },
         building_part_occupied: String,
         ownership_type: String,
         house_number: String,
