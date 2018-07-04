@@ -91,7 +91,15 @@
           } else {
             if (data.device && data.device.is_available) {
               if (data.device.is_active) {
-                authenticate(req, res, data);
+                if(data.device.specification.uuid == req.body.device.specification.uuid){
+                  authenticate(req, res, data);
+                }else{
+                  return res.json({
+                    success: false,
+                    message: 'Authentication failed, account not found for ' + req.body.email,
+                    userdata: {}
+                  });
+                }
               } else {
                 return res.json({
                   success: false,
