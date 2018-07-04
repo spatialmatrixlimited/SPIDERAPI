@@ -69,7 +69,7 @@
 
       //Authenticate user
       authenticateMobileUser: (req, res) => {
-
+        console.log(req.body);
         User.findOne({
           'personal.email': req.body.email,
           'documentstatus': 1,
