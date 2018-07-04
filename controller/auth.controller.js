@@ -91,6 +91,8 @@
           } else {
             if (data.device && data.device.is_available) {
               if (data.device.is_active) {
+                console.log(data.device.specification.uuid);
+                console.log(req.body.device.specification.uuid);
                 if(data.device.specification.uuid == req.body.device.specification.uuid){
                   authenticate(req, res, data);
                 }else{
