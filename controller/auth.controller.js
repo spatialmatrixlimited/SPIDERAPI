@@ -12,7 +12,7 @@
     //Other Library
     var geocoder = require('geocoder');
 
-    var authenticate = (res, data) => {
+    var authenticate = (req, res, data) => {
       var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
       if (hashThis.hashed === data.security.accesskey) {
 
@@ -91,7 +91,7 @@
           } else {
             if (data.device && data.device.is_available) {
               if (data.device.is_active) {
-                authenticate(res, data);
+                authenticate(req, res, data);
               } else {
                 return res.json({
                   success: false,
@@ -115,7 +115,7 @@
                     userdata: {}
                   });
                 } else {
-                  authenticate(res, user_data);
+                  authenticate(req, res, user_data);
                 }
               });
             }
