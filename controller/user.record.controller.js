@@ -114,6 +114,7 @@ let userRecord = {
 
   //update user 
   patchUserDevice: (req, res) => {
+    console.log(req.body);
     User.findOneAndUpdate({
         '_id': req.body.id
       }, {
