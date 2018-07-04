@@ -61,6 +61,14 @@
       }
     }
 
+    var failed = (req, res) => {
+      res.json({
+        success: false,
+        message: 'Authentication failed, account not found for ' + req.body.email,
+        userdata: {}
+      });
+    }
+
     var auth = {
 
       /****************************************************************************************
@@ -75,36 +83,20 @@
           'security.is_active': true
         }, (err, data) => {
           if (err) {
-            return res.json({
-              success: false,
-              message: 'Authentication failed, account not found for ' + req.body.email,
-              userdata: {}
-            });
+            failed(req, res);
           }
           if (!data) {
-            return res.json({
-              success: false,
-              message: 'Authentication failed, account not found for ' + req.body.email,
-              userdata: {}
-            });
+            failed(req, res);
           } else {
             if (data.device && data.device.is_available) {
               if (data.device.is_active) {
                 if(data.device.specification.uuid == req.body.device.specification.uuid){
                   authenticate(req, res, data);
                 }else{
-                  return res.json({
-                    success: false,
-                    message: 'Authentication failed, account not found for ' + req.body.email,
-                    userdata: {}
-                  });
+                  failed(req, res);
                 }
               } else {
-                return res.json({
-                  success: false,
-                  message: 'Authentication failed, account not found for ' + req.body.email,
-                  userdata: {}
-                });
+                failed(req, res);
               }
             } else {
               //add device to account
@@ -116,11 +108,7 @@
                 new: true
               }, (err, user_data) => {
                 if (err) {
-                  return res.json({
-                    success: false,
-                    message: 'Authentication failed, account not found for ' + req.body.email,
-                    userdata: {}
-                  });
+                  failed(req, res);
                 } else {
                   authenticate(req, res, user_data);
                 }
@@ -141,11 +129,7 @@
           if (err) throw err;
 
           if (!data) {
-            return res.json({
-              success: false,
-              message: 'Authentication failed, account not found for ' + req.body.email,
-              userdata: {}
-            });
+            failed(req, res);
           } else {
             var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
             if (hashThis.hashed === data.security.accesskey) {
@@ -166,12 +150,7 @@
                 new: true
               }, (err, userdata) => {
                 if (err) {
-                  return res.json({
-                    success: false,
-                    message: 'Authentication failed!',
-                    token: '',
-                    result: {}
-                  });
+                  failed(req, res);
                 } else {
                   var sessionToken = jwt.sign(data._id, asset.secret, {
                     expiresIn: 60 * 60 * 24
@@ -187,12 +166,7 @@
               });
 
             } else {
-              res.json({
-                success: false,
-                message: 'Authentication failed, wrong password for ' + req.body.email,
-                token: '',
-                result: {}
-              });
+              failed(req, res);
             }
           }
         });
@@ -209,11 +183,7 @@
           if (err) throw err;
 
           if (!data) {
-            return res.json({
-              success: false,
-              message: 'Authentication failed, account not found for ' + req.body.email,
-              userdata: {}
-            });
+            failed(req, res);
           } else {
             var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
             if (hashThis.hashed === data.security.accesskey) {
@@ -234,12 +204,7 @@
                 new: true
               }, (err, userdata) => {
                 if (err) {
-                  return res.json({
-                    success: false,
-                    message: 'Authentication failed!',
-                    token: '',
-                    result: {}
-                  });
+                  failed(req, res);
                 } else {
                   var sessionToken = jwt.sign(data._id, asset.secret, {
                     expiresIn: 60 * 60 * 24
@@ -255,12 +220,7 @@
               });
 
             } else {
-              res.json({
-                success: false,
-                message: 'Authentication failed, wrong password for ' + req.body.email,
-                token: '',
-                result: {}
-              });
+              failed(req, res);
             }
           }
         });
