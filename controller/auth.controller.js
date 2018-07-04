@@ -12,11 +12,116 @@
     //Other Library
     var geocoder = require('geocoder');
 
+    var authenticate = (res, data) => {
+      var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
+      if (hashThis.hashed === data.security.accesskey) {
+
+        //log signin  rate for analytics
+        analytics.logSignIn(req);
+
+        User.findOneAndUpdate({
+          '_id': data._id
+        }, {
+          'last_seen': new Date()
+        }, {
+          fields: {
+            'security.accesscode': 0,
+            'security.accesskey': 0,
+            'documentstatus': 0
+          },
+          new: true
+        }, (err, userdata) => {
+          if (err) {
+            return res.json({
+              success: false,
+              message: 'Authentication failed!',
+              token: '',
+              result: {}
+            });
+          } else {
+            var sessionToken = jwt.sign(data._id, asset.secret, {
+              expiresIn: 60 * 60 * 24
+            });
+
+            return res.json({
+              success: true,
+              message: 'Authenticated!',
+              token: sessionToken,
+              result: userdata,
+            });
+          }
+        });
+      } else {
+        res.json({
+          success: false,
+          message: 'Authentication failed, wrong password for ' + req.body.email,
+          token: '',
+          result: {}
+        });
+      }
+    }
+
     var auth = {
 
       /****************************************************************************************
           AUTHENTICATE
       ****************************************************************************************/
+
+      //Authenticate user
+      authenticateMobileUser: (req, res) => {
+
+        User.findOne({
+          'personal.email': req.body.email,
+          'documentstatus': 1,
+          'security.is_active': true
+        }, (err, data) => {
+          if (err) {
+            return res.json({
+              success: false,
+              message: 'Authentication failed, account not found for ' + req.body.email,
+              userdata: {}
+            });
+          }
+          if (!data) {
+            return res.json({
+              success: false,
+              message: 'Authentication failed, account not found for ' + req.body.email,
+              userdata: {}
+            });
+          } else {
+            if (data.device && data.device.is_available) {
+              if (data.device.is_active) {
+                authenticate(res, data);
+              } else {
+                return res.json({
+                  success: false,
+                  message: 'Authentication failed, account not found for ' + req.body.email,
+                  userdata: {}
+                });
+              }
+            } else {
+              //add device to account
+              User.findOneAndUpdate({
+                '_id': data._id
+              }, {
+                'device': req.body.device
+              }, {
+                new: true
+              }, (err, user_data) => {
+                if (err) {
+                  return res.json({
+                    success: false,
+                    message: 'Authentication failed, account not found for ' + req.body.email,
+                    userdata: {}
+                  });
+                } else {
+                  authenticate(res, user_data);
+                }
+              });
+            }
+          }
+        });
+      },
 
       //Authenticate user
       authenticateUser: (req, res) => {

@@ -53,7 +53,10 @@ var userSchema = new UserSchema({
     }
   },
   security: {
-    user_type: { type: String, default: 'Individual' },
+    user_type: {
+      type: String,
+      default: 'Individual'
+    },
     role: String,
     is_active: {
       type: Boolean,
@@ -61,6 +64,19 @@ var userSchema = new UserSchema({
     },
     accesskey: String,
     accesscode: String
+  },
+  device: {
+    is_available: Boolean,
+    is_active: Boolean,
+    specification: {
+      uuid: String,
+      model: String,
+      platform: String,
+      version: String,
+      manufacturer: String,
+      is_virtual: String,
+      hardware_serial: String
+    }
   },
   conversations: [{
     with: String,
