@@ -58,6 +58,7 @@ router.get('/property/entities/:id', entityRecord.getPropertyEntities); //single
 router.patch('/user', userRecord.patchUser); //update user
 router.patch('/organisation', userRecord.patchOrganisationUser); //update organisation user
 router.patch('/user/device', userRecord.patchUserDevice); //update user device
+router.patch('/user/device/remove', userRecord.removeDevice); //remove user device
 router.patch('/user/avatar', userRecord.patchAvatar); //update user avatar
 router.patch('/user/onesignal', userRecord.patchUserPlayerId); //update user OneSignal Player ID
 router.patch('/user/security', userRecord.patchUserSecurity); //update user password

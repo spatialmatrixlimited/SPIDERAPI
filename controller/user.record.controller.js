@@ -138,6 +138,32 @@ let userRecord = {
       });
   },
 
+   //update user 
+   removeDevice: (req, res) => {
+    User.findOneAndUpdate({
+        '_id': req.body.id
+      }, {
+        'device': {},
+      }, {
+        new: true
+      })
+      .exec((err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            message: 'Operation failed!',
+            result: {}
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: data
+          });
+        }
+      });
+  },
+
    //update organisation user
    patchOrganisationUser: (req, res) => {
     User.findOneAndUpdate({
