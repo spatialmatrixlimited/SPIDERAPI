@@ -235,12 +235,10 @@ let streetRecord = {
 
    // Get all streets by GIS ID
    getStreetsByGIS: (req, res) => {
-     console.log(req.params.id);
     StreetRecord.find({
       'document_status': 1,
       'street.gis_id': req.params.id
     }, (err, data) => {
-      console.log(data);
       if (err) {
         res.json({
           success: false,
