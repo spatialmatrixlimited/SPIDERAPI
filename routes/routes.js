@@ -32,6 +32,7 @@ router.get('/verify/:email', userRecord.verifyUser); // verify user
 router.get('/verify/organisation/:email', userRecord.verifyOrganisation); // verify organisation
 
 router.get('/user/streets/:id', streetRecord.getStreetsByUser); //get all street data by specified user
+router.get('/gis/street/:id', streetRecord.getStreetsByGIS); //street data by GIS ID
 router.get('/street/:id', streetRecord.getStreet); //single street data
 router.get('/streets/:start/:limit', streetRecord.getStreets); //all street data
 router.get('/search/streets/:owner/:search/:start/:limit', streetRecord.searchOrganisationStreets); //search all street data for organisation

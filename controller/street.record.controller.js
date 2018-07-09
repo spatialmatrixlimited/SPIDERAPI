@@ -233,6 +233,28 @@ let streetRecord = {
     });
   },
 
+   // Get all streets by GIS ID
+   getStreetsByGIS: (req, res) => {
+    StreetRecord.find({
+      'document_status': 1,
+      'street.gis_id': req.params.id
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        return res.json({
+          success: true,
+          result: data
+        });
+      }
+    }).sort({
+      'created': -1
+    });
+  },
+
 
   // Get all streets
   getStreets: (req, res) => {
