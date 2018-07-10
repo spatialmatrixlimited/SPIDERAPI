@@ -34,8 +34,9 @@ var propertySchema = new PropertySchema({
         refuse_disposal: String,
         has_signage: Boolean,
         gate_house: Number,
+        gate_house_id: String,
         generator_house: Number,
-        boys_quarter: Number,
+        generator_house_id: String,
         number_of_entity: Number,
         accessible: Boolean
     },
