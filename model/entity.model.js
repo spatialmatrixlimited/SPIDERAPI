@@ -16,6 +16,7 @@ var entitySchema = new EntitySchema({
         entity_name: String,
         entity_group: String,
         entity_category: String,
+        entity_categories: [String],
         meter_available: Boolean,
         meter_condition: String,
         meter_phases: String,
