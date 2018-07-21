@@ -27,15 +27,15 @@ let streetRecord = {
 
     newRecord.save().then((streetData) => {
       if (streetData) {
-        res.json({
-          success: true,
-          result: data.signature
-        });
-      } else {
         console.log('STREET SIGNATURE (DATA)', streetData.signature);
         res.json({
-          success: false,
+          success: true,
           result: streetData.signature
+        });
+      } else {
+        res.json({
+          success: false,
+          result: ''
         });
       }
     }, (err) => {

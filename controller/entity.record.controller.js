@@ -33,7 +33,7 @@ let entityRecord = {
           $inc: {
             entities: 1
           }
-        }, (err, _data) => {
+        }, (err, propertyData) => {
           console.log('ENTITY SIGNATURE (DATA)', entityData.signature);
           res.json({
             success: true,
