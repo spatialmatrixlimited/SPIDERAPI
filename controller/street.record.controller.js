@@ -32,6 +32,7 @@ let streetRecord = {
           result: data.signature
         });
       } else {
+        console.log('STREET SIGNATURE (DATA)', streetData.signature);
         res.json({
           success: false,
           result: streetData.signature
@@ -97,13 +98,14 @@ let streetRecord = {
           res.json({
             success: false,
             message: 'Operation failed!',
-            result: {}
+            result: ''
           });
         } else {
+          console.log('STREET SIGNATURE (PHOTO)', streetData.signature);
           res.json({
             success: true,
             message: 'Operation successful!',
-            result: data
+            result: data.signature
           });
         }
       });
