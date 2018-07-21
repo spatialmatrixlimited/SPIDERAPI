@@ -73,13 +73,12 @@ let entityRecord = {
             signatures.insert({
               'id': entityData._id,
               'signature': entityData.signature
-            }).then((signatureData) => {
-              console.log('ENTITY SIGNATURE (DATA)', signatureData);
+            });
+            console.log('ENTITY SIGNATURE (DATA)', signatureData);
               res.json({
                 success: true,
                 result: entityData.signature
               });
-            });
           });
         } else {
           res.json({
@@ -204,15 +203,13 @@ let entityRecord = {
             signatures.insert({
               'id': data._id,
               'signature': data.signature
-            }).then((signatureData) => {
-              console.log('ENTITY SIGNATURE (PHOTO)', signatureData);
-              res.json({
-                success: true,
-                message: 'Operation successful!',
-                result: data.signature
-              });
             });
-
+            console.log('ENTITY SIGNATURE (PHOTO)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
+            });
           }
         });
       });

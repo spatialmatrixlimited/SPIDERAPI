@@ -6,29 +6,29 @@ let path = require('path');
 loki = require('lokijs')
 
 let signatures;
-    const signatureStorage = path.resolve(__dirname, '../../db/signatures.db.json');
+const signatureStorage = path.resolve(__dirname, '../../db/signatures.db.json');
 
-    let databaseInitialize = {
-        SIGNATURE: () => {
-            signatures = SIGNATURES.getCollection("signatures")
-            if (signatures === null) {
-                signatures = SIGNATURES.addCollection('signatures', {
-                    indices: ['id']
-                });
-            }
-        }
+let databaseInitialize = {
+  SIGNATURE: () => {
+    signatures = SIGNATURES.getCollection("signatures")
+    if (signatures === null) {
+      signatures = SIGNATURES.addCollection('signatures', {
+        indices: ['id']
+      });
     }
-    
-    
-    let SIGNATURES = new loki(signatureStorage, {
-        autoload: true,
-        autoloadCallback: databaseInitialize.SIGNATURE,
-        autosave: true,
-        autosaveInterval: 5000
-    });
+  }
+}
 
 
-    
+let SIGNATURES = new loki(signatureStorage, {
+  autoload: true,
+  autoloadCallback: databaseInitialize.SIGNATURE,
+  autosave: true,
+  autosaveInterval: 5000
+});
+
+
+
 //App Library
 let imageProcessor = require('./image.processor');
 
@@ -45,7 +45,7 @@ let streetRecord = {
       'signature': payload.signature
     });
 
-    if (_signatures.length >  0) {
+    if (_signatures.length > 0) {
       res.json({
         success: true,
         message: 'Operation successful!',
@@ -67,13 +67,12 @@ let streetRecord = {
           signatures.insert({
             'id': data._id,
             'signature': streetData.signature
-          }).then((signatureData) => {
-            console.log('STREET SIGNATURE (DATA)', signatureData);
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: streetData.signature
-            });
+          });
+          console.log('STREET SIGNATURE (DATA)', signatureData);
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: streetData.signature
           });
         } else {
           res.json({
@@ -118,7 +117,7 @@ let streetRecord = {
     _signatures = signatures.find({
       'signature': payload.signature
     });
-    if (_signatures.length >  0) {
+    if (_signatures.length > 0) {
       res.json({
         success: true,
         message: 'Operation successful!',
@@ -160,13 +159,12 @@ let streetRecord = {
             signatures.insert({
               'id': data._id,
               'signature': data.signature
-            }).then((signatureData) => {
-              console.log('STREET SIGNATURE (PHOTO)', signatureData);
-              res.json({
-                success: true,
-                message: 'Operation successful!',
-                result: data.signature
-              });
+            });
+            console.log('STREET SIGNATURE (PHOTO)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
             });
           }
         });
