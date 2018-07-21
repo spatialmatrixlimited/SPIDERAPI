@@ -14,6 +14,7 @@ let entityRecord = {
   //add new street record
   addNewEntity: (req, res) => {
     let payload = req.body;
+    let _signatures = [];
     _signatures = signatures.find({
       'signature': payload.signature
     });
@@ -132,6 +133,7 @@ let entityRecord = {
   //update property entity image via mobile
   patchEntityPhoto: (req, res) => {
     let payload = req.body;
+    let _signatures = [];
     _signatures = signatures.find({
       'signature': payload.signature
     });
