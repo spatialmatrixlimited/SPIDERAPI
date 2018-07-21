@@ -45,7 +45,7 @@ let streetRecord = {
       'signature': payload.signature
     });
 
-    if (_signatures.length === 0) {
+    if (_signatures.length >  0) {
       res.json({
         success: true,
         message: 'Operation successful!',
@@ -118,7 +118,7 @@ let streetRecord = {
     _signatures = signatures.find({
       'signature': payload.signature
     });
-    if (_signatures.length === 0) {
+    if (_signatures.length >  0) {
       res.json({
         success: true,
         message: 'Operation successful!',

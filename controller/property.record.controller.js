@@ -44,7 +44,7 @@ let propertyRecord = {
     _signatures = signatures.find({
       'signature': payload.signature
     });
-    if (_signatures.length === 0) {
+    if (_signatures.length >  0) {
       res.json({
         success: true,
         result: _signatures[0].signature
@@ -163,7 +163,7 @@ let propertyRecord = {
     _signatures = signatures.find({
       'signature': payload.signature
     });
-    if (_signatures.length === 0) {
+    if (_signatures.length >  0) {
       res.json({
         success: true,
         message: 'Operation successful!',
