@@ -70,7 +70,7 @@ let propertyRecord = {
               properties: 1
             }
           }, (err, streetData) => {
-            signatures.insert({
+            signatureData = signatures.insert({
               'id': propertyData._id,
               'signature': propertyData.signature
             });
@@ -201,7 +201,7 @@ let propertyRecord = {
               result: ''
             });
           } else {
-            signatures.insert({
+            signatureData = signatures.insert({
               'id': data._id,
               'signature': data.signature
             });

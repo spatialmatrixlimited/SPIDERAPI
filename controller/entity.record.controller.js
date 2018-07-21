@@ -70,7 +70,7 @@ let entityRecord = {
               entities: 1
             }
           }, (err, propertyData) => {
-            signatures.insert({
+            signatureData = signatures.insert({
               'id': entityData._id,
               'signature': entityData.signature
             });
@@ -200,7 +200,7 @@ let entityRecord = {
               result: ''
             });
           } else {
-            signatures.insert({
+            signatureData = signatures.insert({
               'id': data._id,
               'signature': data.signature
             });

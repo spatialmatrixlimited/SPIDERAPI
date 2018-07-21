@@ -64,7 +64,7 @@ let streetRecord = {
 
       newRecord.save().then((streetData) => {
         if (streetData) {
-          signatures.insert({
+          signatureData = signatures.insert({
             'id': data._id,
             'signature': streetData.signature
           });
@@ -156,7 +156,7 @@ let streetRecord = {
               result: ''
             });
           } else {
-            signatures.insert({
+            signatureData = signatures.insert({
               'id': data._id,
               'signature': data.signature
             });
