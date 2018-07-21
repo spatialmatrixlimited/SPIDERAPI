@@ -74,7 +74,6 @@ let propertyRecord = {
               'id': propertyData._id,
               'signature': propertyData.signature
             });
-            console.log('PROPERTY SIGNATURE (DATA)', signatureData);
             res.json({
               success: true,
               result: propertyData.signature
@@ -205,7 +204,6 @@ let propertyRecord = {
               'id': data._id,
               'signature': data.signature
             });
-            console.log('PROPERTY SIGNATURE (PHOTO)', signatureData);
               res.json({
                 success: true,
                 message: 'Operation successful!',

@@ -68,7 +68,6 @@ let streetRecord = {
             'id': streetData._id,
             'signature': streetData.signature
           });
-          console.log('STREET SIGNATURE (DATA)', signatureData);
           res.json({
             success: true,
             message: 'Operation successful!',
@@ -160,7 +159,6 @@ let streetRecord = {
               'id': data._id,
               'signature': data.signature
             });
-            console.log('STREET SIGNATURE (PHOTO)', signatureData);
             res.json({
               success: true,
               message: 'Operation successful!',

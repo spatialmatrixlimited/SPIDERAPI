@@ -74,7 +74,6 @@ let entityRecord = {
               'id': entityData._id,
               'signature': entityData.signature
             });
-            console.log('ENTITY SIGNATURE (DATA)', signatureData);
               res.json({
                 success: true,
                 result: entityData.signature
@@ -204,7 +203,6 @@ let entityRecord = {
               'id': data._id,
               'signature': data.signature
             });
-            console.log('ENTITY SIGNATURE (PHOTO)', signatureData);
             res.json({
               success: true,
               message: 'Operation successful!',
