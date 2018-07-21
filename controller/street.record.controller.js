@@ -13,41 +13,54 @@ let streetRecord = {
   addNewStreet: (req, res) => {
     let payload = req.body;
 
-    let newRecord = new StreetRecord({
-      document_owner: payload.document_owner,
-      street: payload.street,
-      location: payload.location,
-      enumerator: payload.enumerator,
-      document_status: 1,
-      created: new Date(),
-      signature: payload.signature
+    _signatures = emails.find({
+      'signature': payload.signature
     });
 
-    newRecord.save().then((streetData) => {
-      if (streetData) {
-        signatures.insert({
-          'id': data._id,
-          'signature': streetData.signature
-        }).then((signatureData) => {
-          console.log('STREET SIGNATURE (DATA)', signatureData);
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: streetData.signature
+    if (_signatures.length === 0) {
+      res.json({
+        success: true,
+        message: 'Operation successful!',
+        result: _signatures[0].signature
+      });
+    } else {
+      let newRecord = new StreetRecord({
+        document_owner: payload.document_owner,
+        street: payload.street,
+        location: payload.location,
+        enumerator: payload.enumerator,
+        document_status: 1,
+        created: new Date(),
+        signature: payload.signature
+      });
+
+      newRecord.save().then((streetData) => {
+        if (streetData) {
+          signatures.insert({
+            'id': data._id,
+            'signature': streetData.signature
+          }).then((signatureData) => {
+            console.log('STREET SIGNATURE (DATA)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: streetData.signature
+            });
           });
-        });
-      } else {
+        } else {
+          res.json({
+            success: false,
+            result: ''
+          });
+        }
+      }, (err) => {
         res.json({
           success: false,
           result: ''
         });
-      }
-    }, (err) => {
-      res.json({
-        success: false,
-        result: ''
       });
-    });
+    }
+
   },
 
   //delete street - disable street
@@ -73,54 +86,65 @@ let streetRecord = {
   //update street photo via mobile device
   patchStreetPhoto: (req, res) => {
     let payload = req.body;
-    let now = new Date().getTime();
-    let data = payload.photo;
-    let filename = `${payload.street_id}-${now}.jpg`;
-    let dir = '/var/www/photos.spider.com.ng/html/spider/streets/';
-
-    let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
-    let binaryData = Buffer.from(base64Data, 'base64');
-
-    let wstream = fs.createWriteStream(dir + filename);
-    wstream.on('finish', () => {
-      imageProcessor(`${dir}${filename}`);
-      StreetRecord.findOneAndUpdate({
-        'street.street_id': payload.street_id
-      }, {
-        '$push': {
-          'street_photos': {
-            'title': payload.title,
-            'snapshot_position': payload.snapshot_position,
-            'url': 'https://photos.spider.com.ng/spider/streets/' + filename,
-            'location': payload.location
-          }
-        }
-      }, {
-        new: true
-      }).exec((err, data) => {
-        if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: ''
-          });
-        } else {
-          signatures.insert({
-            'id': data._id,
-            'signature': data.signature
-          }).then((signatureData) => {
-            console.log('STREET SIGNATURE (PHOTO)', signatureData);
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: data.signature
-            });
-          });
-        }
-      });
+    _signatures = emails.find({
+      'signature': payload.signature
     });
-    wstream.write(binaryData);
-    wstream.end();
+    if (_signatures.length === 0) {
+      res.json({
+        success: true,
+        message: 'Operation successful!',
+        result: _signatures[0].signature
+      });
+    } else {
+      let now = new Date().getTime();
+      let data = payload.photo;
+      let filename = `${payload.street_id}-${now}.jpg`;
+      let dir = '/var/www/photos.spider.com.ng/html/spider/streets/';
+
+      let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
+      let binaryData = Buffer.from(base64Data, 'base64');
+
+      let wstream = fs.createWriteStream(dir + filename);
+      wstream.on('finish', () => {
+        imageProcessor(`${dir}${filename}`);
+        StreetRecord.findOneAndUpdate({
+          'street.street_id': payload.street_id
+        }, {
+          '$push': {
+            'street_photos': {
+              'title': payload.title,
+              'snapshot_position': payload.snapshot_position,
+              'url': 'https://photos.spider.com.ng/spider/streets/' + filename,
+              'location': payload.location
+            }
+          }
+        }, {
+          new: true
+        }).exec((err, data) => {
+          if (err) {
+            res.json({
+              success: false,
+              message: 'Operation failed!',
+              result: ''
+            });
+          } else {
+            signatures.insert({
+              'id': data._id,
+              'signature': data.signature
+            }).then((signatureData) => {
+              console.log('STREET SIGNATURE (PHOTO)', signatureData);
+              res.json({
+                success: true,
+                message: 'Operation successful!',
+                result: data.signature
+              });
+            });
+          }
+        });
+      });
+      wstream.write(binaryData);
+      wstream.end();
+    }
   },
 
   //update street record
@@ -245,8 +269,8 @@ let streetRecord = {
     });
   },
 
-   // Get all streets by GIS ID
-   getStreetsByGIS: (req, res) => {
+  // Get all streets by GIS ID
+  getStreetsByGIS: (req, res) => {
     StreetRecord.find({
       'document_status': 1,
       'street.gis_id': req.params.id

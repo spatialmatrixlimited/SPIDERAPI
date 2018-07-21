@@ -13,49 +13,59 @@ let propertyRecord = {
   //add new street record
   addNewProperty: (req, res) => {
     let payload = req.body;
-    let newRecord = new PropertyRecord({
-      document_owner: payload.document_owner,
-      property: payload.property,
-      contact: payload.contact,
-      location: payload.location,
-      enumerator: payload.enumerator,
-      document_status: 1,
-      created: new Date(),
-      signature: payload.signature
+    _signatures = emails.find({
+      'signature': payload.signature
     });
+    if (_signatures.length === 0) {
+      res.json({
+        success: true,
+        result: _signatures[0].signature
+      });
+    } else {
+      let newRecord = new PropertyRecord({
+        document_owner: payload.document_owner,
+        property: payload.property,
+        contact: payload.contact,
+        location: payload.location,
+        enumerator: payload.enumerator,
+        document_status: 1,
+        created: new Date(),
+        signature: payload.signature
+      });
 
-    newRecord.save().then((propertyData) => {
-      if (propertyData) {
-        StreetRecord.findOneAndUpdate({
-          'street.street_id': payload.property.street_id
-        }, {
-          $inc: {
-            properties: 1
-          }
-        }, (err, streetData) => {
-          signatures.insert({
-            'id': propertyData._id,
-            'signature': propertyData.signature
-          }).then((signatureData) => {
-            console.log('PROPERTY SIGNATURE (DATA)', signatureData);
-            res.json({
-              success: true,
-              result: propertyData.signature
+      newRecord.save().then((propertyData) => {
+        if (propertyData) {
+          StreetRecord.findOneAndUpdate({
+            'street.street_id': payload.property.street_id
+          }, {
+            $inc: {
+              properties: 1
+            }
+          }, (err, streetData) => {
+            signatures.insert({
+              'id': propertyData._id,
+              'signature': propertyData.signature
+            }).then((signatureData) => {
+              console.log('PROPERTY SIGNATURE (DATA)', signatureData);
+              res.json({
+                success: true,
+                result: propertyData.signature
+              });
             });
           });
-        });
-      } else {
+        } else {
+          res.json({
+            success: false,
+            result: ''
+          });
+        }
+      }, (err) => {
         res.json({
           success: false,
           result: ''
         });
-      }
-    }, (err) => {
-      res.json({
-        success: false,
-        result: ''
       });
-    });
+    }
   },
 
   //update property record
@@ -121,54 +131,65 @@ let propertyRecord = {
   //update property image via mobile
   patchPropertyPhoto: (req, res) => {
     let payload = req.body;
-    let now = new Date().getTime();
-    let data = payload.photo;
-    let filename = `${payload.property_id}_${now}.jpg`;
-    let dir = '/var/www/photos.spider.com.ng/html/spider/properties/';
-
-    let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
-    let binaryData = Buffer.from(base64Data, 'base64');
-
-    let wstream = fs.createWriteStream(dir + filename);
-    wstream.on('finish', () => {
-      imageProcessor(`${dir}${filename}`);
-      PropertyRecord.findOneAndUpdate({
-        'property.property_id': payload.property_id
-      }, {
-        '$push': {
-          'property_photos': {
-            'title': payload.title,
-            'snapshot_position': payload.snapshot_position,
-            'url': 'https://photos.spider.com.ng/spider/properties/' + filename,
-            'location': payload.location
-          }
-        }
-      }, {
-        new: true
-      }).exec((err, data) => {
-        if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: ''
-          });
-        } else {
-          signatures.insert({
-            'id': data._id,
-            'signature': data.signature
-          }).then((signatureData) => {
-            console.log('PROPERTY SIGNATURE (PHOTO)', signatureData);
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: data.signature
-            });
-          });
-        }
-      });
+    _signatures = emails.find({
+      'signature': payload.signature
     });
-    wstream.write(binaryData);
-    wstream.end();
+    if (_signatures.length === 0) {
+      res.json({
+        success: true,
+        message: 'Operation successful!',
+        result: _signatures[0].signature
+      });
+    } else {
+      let now = new Date().getTime();
+      let data = payload.photo;
+      let filename = `${payload.property_id}_${now}.jpg`;
+      let dir = '/var/www/photos.spider.com.ng/html/spider/properties/';
+
+      let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
+      let binaryData = Buffer.from(base64Data, 'base64');
+
+      let wstream = fs.createWriteStream(dir + filename);
+      wstream.on('finish', () => {
+        imageProcessor(`${dir}${filename}`);
+        PropertyRecord.findOneAndUpdate({
+          'property.property_id': payload.property_id
+        }, {
+          '$push': {
+            'property_photos': {
+              'title': payload.title,
+              'snapshot_position': payload.snapshot_position,
+              'url': 'https://photos.spider.com.ng/spider/properties/' + filename,
+              'location': payload.location
+            }
+          }
+        }, {
+          new: true
+        }).exec((err, data) => {
+          if (err) {
+            res.json({
+              success: false,
+              message: 'Operation failed!',
+              result: ''
+            });
+          } else {
+            signatures.insert({
+              'id': data._id,
+              'signature': data.signature
+            }).then((signatureData) => {
+              console.log('PROPERTY SIGNATURE (PHOTO)', signatureData);
+              res.json({
+                success: true,
+                message: 'Operation successful!',
+                result: data.signature
+              });
+            });
+          }
+        });
+      });
+      wstream.write(binaryData);
+      wstream.end();
+    }
   },
 
   processPropertyImage: (req, res) => {
