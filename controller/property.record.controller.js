@@ -13,7 +13,7 @@ let propertyRecord = {
   //add new street record
   addNewProperty: (req, res) => {
     let payload = req.body;
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
     if (_signatures.length === 0) {
@@ -131,7 +131,7 @@ let propertyRecord = {
   //update property image via mobile
   patchPropertyPhoto: (req, res) => {
     let payload = req.body;
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
     if (_signatures.length === 0) {

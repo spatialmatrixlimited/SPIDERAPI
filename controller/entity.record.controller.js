@@ -14,7 +14,7 @@ let entityRecord = {
   //add new street record
   addNewEntity: (req, res) => {
     let payload = req.body;
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
     if (_signatures.length === 0) {
@@ -132,7 +132,7 @@ let entityRecord = {
   //update property entity image via mobile
   patchEntityPhoto: (req, res) => {
     let payload = req.body;
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
     if (_signatures.length === 0) {

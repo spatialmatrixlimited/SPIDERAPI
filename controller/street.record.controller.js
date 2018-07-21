@@ -13,7 +13,7 @@ let streetRecord = {
   addNewStreet: (req, res) => {
     let payload = req.body;
 
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
 
@@ -86,7 +86,7 @@ let streetRecord = {
   //update street photo via mobile device
   patchStreetPhoto: (req, res) => {
     let payload = req.body;
-    _signatures = emails.find({
+    _signatures = signatures.find({
       'signature': payload.signature
     });
     if (_signatures.length === 0) {
