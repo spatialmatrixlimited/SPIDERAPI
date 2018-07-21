@@ -26,7 +26,7 @@ let entityRecord = {
     });
 
     newRecord.save().then((entityData) => {
-      if (data) {
+      if (entityData) {
         PropertyRecord.findOneAndUpdate({
           'property.property_id': payload.property_id
         }, {
