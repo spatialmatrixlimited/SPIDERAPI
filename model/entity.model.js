@@ -87,7 +87,8 @@ var entitySchema = new EntitySchema({
         lastname: String,
         email: String,
         mobile: String
-    }
+    },
+    signature: { type: String, default: '' }
 });
 
 module.exports = mongoose.model('EntityRecord', entitySchema, 'entities');

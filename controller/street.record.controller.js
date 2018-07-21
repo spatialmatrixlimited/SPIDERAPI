@@ -21,25 +21,26 @@ let streetRecord = {
       location: payload.location,
       enumerator: payload.enumerator,
       document_status: 1,
-      created: new Date()
+      created: new Date(),
+      signature: payload.signature
     });
 
-    newRecord.save().then((data) => {
+    newRecord.save().then((streetData) => {
       if (data) {
         res.json({
           success: true,
-          result: data
+          result: data.signature
         });
       } else {
         res.json({
           success: false,
-          result: {}
+          result: streetData.signature
         });
       }
     }, (err) => {
       res.json({
         success: false,
-        result: {}
+        result: ''
       });
     });
   },

@@ -101,7 +101,8 @@ var propertySchema = new PropertySchema({
         email: String,
         mobile: String
     },
-    entities: { type: Number, default: 0 } 
+    entities: { type: Number, default: 0 },
+    signature: { type: String, default: '' }
 });
 
 module.exports = mongoose.model('PropertyRecord', propertySchema, 'properties');

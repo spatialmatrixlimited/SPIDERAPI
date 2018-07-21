@@ -21,10 +21,11 @@ let entityRecord = {
       location: payload.location,
       enumerator: payload.enumerator,
       document_status: 1,
-      created: new Date()
+      created: new Date(),
+      signature: payload.signature
     });
 
-    newRecord.save().then((data) => {
+    newRecord.save().then((entityData) => {
       if (data) {
         PropertyRecord.findOneAndUpdate({
           'property.property_id': payload.property_id
@@ -35,19 +36,19 @@ let entityRecord = {
         }, (err, _data) => {
           res.json({
             success: true,
-            result: data
+            result: entityData.signature
           });
         });
       } else {
         res.json({
           success: false,
-          result: {}
+          result: ''
         });
       }
     }, (err) => {
       res.json({
         success: false,
-        result: {}
+        result: ''
       });
     });
   },
@@ -143,13 +144,13 @@ let entityRecord = {
           res.json({
             success: false,
             message: 'Operation failed!',
-            result: {}
+            result: ''
           });
         } else {
           res.json({
             success: true,
             message: 'Operation successful!',
-            result: data
+            result: data.signature
           });
         }
       });
