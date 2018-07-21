@@ -1,9 +1,7 @@
 //Database Model
 let StreetRecord = require('../model/street.model');
-
+let signatures = require('./signature.controller');
 //App Library
-let hashMe = require('../lib/cryptic');
-let makeCase = require('../lib/stringagent');
 let imageProcessor = require('./image.processor');
 
 //Other Library
@@ -27,10 +25,16 @@ let streetRecord = {
 
     newRecord.save().then((streetData) => {
       if (streetData) {
-        console.log('STREET SIGNATURE (DATA)', streetData.signature);
-        res.json({
-          success: true,
-          result: streetData.signature
+        signatures.insert({
+          'id': data._id,
+          'signature': streetData.signature
+        }).then((signatureData) => {
+          console.log('STREET SIGNATURE (DATA)', signatureData);
+          res.json({
+            success: true,
+            message: 'Operation successful!',
+            result: streetData.signature
+          });
         });
       } else {
         res.json({
@@ -101,11 +105,16 @@ let streetRecord = {
             result: ''
           });
         } else {
-          console.log('STREET SIGNATURE (PHOTO)', data.signature);
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data.signature
+          signatures.insert({
+            'id': data._id,
+            'signature': data.signature
+          }).then((signatureData) => {
+            console.log('STREET SIGNATURE (PHOTO)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
+            });
           });
         }
       });

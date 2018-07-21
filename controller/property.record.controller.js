@@ -1,6 +1,7 @@
 //Database Model
 let PropertyRecord = require('../model/property.model');
 let StreetRecord = require('../model/street.model');
+let signatures = require('./signature.controller');
 //App Library
 let imageProcessor = require('./image.processor');
 
@@ -32,10 +33,15 @@ let propertyRecord = {
             properties: 1
           }
         }, (err, streetData) => {
-          console.log('PROPERTY SIGNATURE', propertyData.signature);
-          res.json({
-            success: true,
-            result: propertyData.signature
+          signatures.insert({
+            'id': propertyData._id,
+            'signature': propertyData.signature
+          }).then((signatureData) => {
+            console.log('PROPERTY SIGNATURE (DATA)', signatureData);
+            res.json({
+              success: true,
+              result: propertyData.signature
+            });
           });
         });
       } else {
@@ -147,11 +153,16 @@ let propertyRecord = {
             result: ''
           });
         } else {
-          console.log('PROPERTY SIGNATURE (PHOTO)', data.signature);
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data.signature
+          signatures.insert({
+            'id': data._id,
+            'signature': data.signature
+          }).then((signatureData) => {
+            console.log('PROPERTY SIGNATURE (PHOTO)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
+            });
           });
         }
       });

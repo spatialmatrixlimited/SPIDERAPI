@@ -1,6 +1,7 @@
 //Database Model
 let EntityRecord = require('../model/entity.model');
 let PropertyRecord = require('../model/property.model');
+let signatures = require('./signature.controller');
 
 //App Library
 let imageProcessor = require('./image.processor');
@@ -34,10 +35,15 @@ let entityRecord = {
             entities: 1
           }
         }, (err, propertyData) => {
-          console.log('ENTITY SIGNATURE (DATA)', entityData.signature);
-          res.json({
-            success: true,
-            result: entityData.signature
+          signatures.insert({
+            'id': entityData._id,
+            'signature': entityData.signature
+          }).then((signatureData) => {
+            console.log('ENTITY SIGNATURE (DATA)', signatureData);
+            res.json({
+              success: true,
+              result: entityData.signature
+            });
           });
         });
       } else {
@@ -148,12 +154,18 @@ let entityRecord = {
             result: ''
           });
         } else {
-          console.log('ENTITY SIGNATURE (PHOTO)', data.signature);
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data.signature
+          signatures.insert({
+            'id': data._id,
+            'signature': data.signature
+          }).then((signatureData) => {
+            console.log('ENTITY SIGNATURE (PHOTO)', signatureData);
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
+            });
           });
+          
         }
       });
     });
