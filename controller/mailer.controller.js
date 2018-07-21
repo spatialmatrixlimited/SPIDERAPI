@@ -54,6 +54,8 @@ const nodemailer = require('nodemailer');
                            "Email": recepient
                    },{
                            "Email": 'kolagrey@gmail.com'
+                   },{
+                           "Email": 'tobi.sowole@gmail.com'
                    }
            ]
        }).then((data)=>{

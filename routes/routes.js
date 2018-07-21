@@ -6,9 +6,8 @@ const userRecord = require('../controller/user.record.controller');
 const propertyRecord = require('../controller/property.record.controller');
 const entityRecord = require('../controller/entity.record.controller');
 const streetRecord = require('../controller/street.record.controller');
+const support = require('../controller/support.controller');
 const oracle = require('../controller/oracle.controller');
-
-const app = express();
 
 router.post('/authenticate', auth.authenticateUser); //authenticate user
 router.post('/authenticate/mobile', auth.authenticateMobileUser); //authenticate mobile user
@@ -18,12 +17,16 @@ router.post('/organisation', registration.addOrganisationUser); //add new organi
 router.post('/street', streetRecord.addNewStreet); //add new street data
 router.post('/property', propertyRecord.addNewProperty); //add new property data
 router.post('/entity', entityRecord.addNewEntity); //add new property entity data
+router.post('/support', support.add); //add new support message
 
 //router.get('/analytics', oracle.getAnalytics);
 router.get('/w3w/engine/start', oracle.w3wEngineStart); //w3w Engine Start
 router.get('/make/love/:code', oracle.generateLove); //make love
 router.get('/headers', oracle.generateHeaders); //generate headers
 router.get('/current/version/:app', oracle.getCurrentVersion); //get app current version
+
+router.get('/support/:id', support.getOne); //get one
+router.get('/support', support.getAll); //get all
 
 router.get('/user/:id', userRecord.getUser); //single user data
 router.get('/users', userRecord.getUsers); //all users data
