@@ -156,7 +156,7 @@ let streetRecord = {
             });
           } else {
             signatureData = signatures.insert({
-              'id': data._id,
+              'id': payload.street_id,
               'signature': data.signature
             });
             res.json({

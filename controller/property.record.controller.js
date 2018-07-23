@@ -201,7 +201,7 @@ let propertyRecord = {
             });
           } else {
             signatureData = signatures.insert({
-              'id': data._id,
+              'id': payload.property_id,
               'signature': data.signature
             });
               res.json({

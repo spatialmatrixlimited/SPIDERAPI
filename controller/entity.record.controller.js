@@ -201,7 +201,7 @@ let entityRecord = {
           } else {
             if(data){
               signatureData = signatures.insert({
-                'id': data._id,
+                'id': payload.entity_id,
                 'signature': data.signature
               });
               res.json({
