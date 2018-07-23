@@ -199,15 +199,24 @@ let entityRecord = {
               result: ''
             });
           } else {
-            signatureData = signatures.insert({
-              'id': data._id,
-              'signature': data.signature
-            });
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: data.signature
-            });
+            if(data){
+              signatureData = signatures.insert({
+                'id': data._id,
+                'signature': data.signature
+              });
+              res.json({
+                success: true,
+                message: 'Operation successful!',
+                result: data.signature
+              });
+            }else{
+              res.json({
+                success: false,
+                message: 'Operation failed!',
+                result: ''
+              });
+            }
+            
           }
         });
       });
