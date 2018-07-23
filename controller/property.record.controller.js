@@ -193,7 +193,7 @@ let propertyRecord = {
         }, {
           new: true
         }).exec((err, data) => {
-          if (err) {
+          if (err || !data) {
             res.json({
               success: false,
               message: 'Operation failed!',
