@@ -299,6 +299,8 @@ let propertyRecord = {
 
   // Get all properties - ADMIN
   getAllProperties: (req, res) => {
+    let skip = parseInt(req.params.skip);
+    console.log(skip);
     PropertyRecord.find({
       'document_status': 1
     }, (err, data) => {
@@ -308,6 +310,7 @@ let propertyRecord = {
           result: []
         });
       } else {
+        console.log(data);
         return res.json({
           success: true,
           result: data
@@ -315,13 +318,13 @@ let propertyRecord = {
       }
     }).sort({
       'created': -1
-    });
+    }).limit(500)
+    .skip(parseInt(skip));
   },
 
   // Get all properties - Organisations
   getOrganisationProperties: (req, res) => {
     let skip = parseInt(req.params.skip);
-    console.log(skip);
     PropertyRecord.find({
       'document_status': 1,
       'document_owner': req.params.owner
@@ -332,7 +335,6 @@ let propertyRecord = {
           result: []
         });
       } else {
-        console.log(data);
         return res.json({
           success: true,
           result: data
