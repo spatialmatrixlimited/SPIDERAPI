@@ -363,7 +363,7 @@ let streetRecord = {
 
   //get all streets - ADMIN
   getAllStreets: (req, res) => {
-    let skip = parseInt(this.params.skip);
+    let skip = parseInt(req.params.skip);
     StreetRecord.find({
       'document_status': 1
     }, (err, data) => {
