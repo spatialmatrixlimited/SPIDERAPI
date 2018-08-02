@@ -103,7 +103,7 @@ var propertySchema = new PropertySchema({
     },
     entities: { type: Number, default: 0 },
     signature: { type: String, default: '' },
-    parsed: { type: boolean, default: false }
+    parsed: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('PropertyRecord', propertySchema, 'properties');
