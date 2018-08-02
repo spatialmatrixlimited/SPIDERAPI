@@ -79,7 +79,7 @@ app.use(routes);
 
 //start server and listen on specified port
 app.listen(port, function () {
-    console.log('GIS API Server is running on port ' + port);
+    console.log('SPiDER Server is running on port ' + port);
 });
 
 /* let w3wInterval = setInterval(()=>{
@@ -89,13 +89,13 @@ app.listen(port, function () {
 },(15 * (60 * 1000))); */
 
 mongoose.connection.on('open', function () {
-    console.log('GIS Database is connected');
+    console.log('SPiDER Database is connected');
 });
 
 // If the connection throws an error
 mongoose.connection.on('error', (err) => {
     console.log('Mongoose default connection error: ' + err);
-    clearInterval(w3wInterval);
+    //clearInterval(w3wInterval);
 });
 
 // When the connection is disconnected

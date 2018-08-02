@@ -384,6 +384,7 @@ let streetRecord = {
 
   //get all streets - Organisation
   getOrganisationStreets: (req, res) => {
+    let skip = parseInt(req.params.skip);
     StreetRecord.find({
       'document_status': 1,
       'document_owner': req.params.owner
@@ -401,7 +402,8 @@ let streetRecord = {
       }
     }).sort({
       'created': -1
-    });
+    }).limit(500)
+    .skip(parseInt(skip));
   },
 
   //get all streets - Individual

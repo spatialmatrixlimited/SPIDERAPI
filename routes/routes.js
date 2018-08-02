@@ -49,8 +49,8 @@ router.get('/properties/:start/:limit', propertyRecord.getProperties); //all pro
 router.get('/all/properties', propertyRecord.getAllProperties); //all properties data for Admin
 router.get('/all/streets', streetRecord.getAllStreets); //all streets data for Admin
 
-router.get('/organisation/properties/:owner', propertyRecord.getOrganisationProperties); //all properties data for organisation
-router.get('/organisation/streets/:owner', streetRecord.getOrganisationStreets); //all streets data for organisation
+router.get('/organisation/properties/:owner/:skip', propertyRecord.getOrganisationProperties); //all properties data for organisation
+router.get('/organisation/streets/:owner/:skip', streetRecord.getOrganisationStreets); //all streets data for organisation
 
 router.get('/individual/properties/:owner', propertyRecord.getIndividualProperties); //all properties data for an individual
 router.get('/individual/streets/:owner', streetRecord.getIndividualStreets); //all streets data for an individual
