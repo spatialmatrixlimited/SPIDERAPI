@@ -300,7 +300,6 @@ let propertyRecord = {
   // Get all properties - ADMIN
   getAllProperties: (req, res) => {
     let skip = parseInt(req.params.skip);
-    console.log(skip);
     PropertyRecord.find({
       'document_status': 1
     }, (err, data) => {
@@ -310,7 +309,6 @@ let propertyRecord = {
           result: []
         });
       } else {
-        console.log(data);
         return res.json({
           success: true,
           result: data
