@@ -1,7 +1,7 @@
 //Database Model
 let PropertyRecord = require('../model/property.model');
 let StreetRecord = require('../model/street.model');
-
+let alasql = require('alasql');
 
 let path = require('path');
 loki = require('lokijs')
@@ -27,6 +27,23 @@ let SIGNATURES = new loki(signatureStorage, {
   autosave: true,
   autosaveInterval: 5000
 });
+
+let getPropsIds = (dist) => {
+  return new Promise(resolve => {
+    let propIds = [];
+    dist.forEach(element => {
+      propIds.push(element.property.property_id);
+    });
+    resolve(propIds);
+  })
+}
+
+let getDistinct = (data) => {
+  return new Promise(resolve => {
+    let dist = alasql('SELECT DISTINCT property FROM ?', [data]);
+    resolve(dist);
+  });
+}
 
 
 //App Library
@@ -204,11 +221,11 @@ let propertyRecord = {
               'id': payload.property_id,
               'signature': data.signature
             });
-              res.json({
-                success: true,
-                message: 'Operation successful!',
-                result: data.signature
-              });
+            res.json({
+              success: true,
+              message: 'Operation successful!',
+              result: data.signature
+            });
           }
         });
       });
@@ -301,47 +318,47 @@ let propertyRecord = {
   getAllProperties: (req, res) => {
     let skip = parseInt(req.params.skip);
     PropertyRecord.find({
-      'document_status': 1
-    }, (err, data) => {
-      if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
-      } else {
-        return res.json({
-          success: true,
-          result: data
-        });
-      }
-    }).sort({
-      'created': -1
-    }).limit(500)
-    .skip(parseInt(skip));
+        'document_status': 1
+      }, (err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            result: []
+          });
+        } else {
+          return res.json({
+            success: true,
+            result: data
+          });
+        }
+      }).sort({
+        'created': -1
+      }).limit(500)
+      .skip(parseInt(skip));
   },
 
   // Get all properties - Organisations
   getOrganisationProperties: (req, res) => {
     let skip = parseInt(req.params.skip);
     PropertyRecord.find({
-      'document_status': 1,
-      'document_owner': req.params.owner
-    }, (err, data) => {
-      if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
-      } else {
-        return res.json({
-          success: true,
-          result: data
-        });
-      }
-    }).sort({
-      'created': -1
-    }).limit(500)
-    .skip(parseInt(skip));
+        'document_status': 1,
+        'document_owner': req.params.owner
+      }, (err, data) => {
+        if (err) {
+          res.json({
+            success: false,
+            result: []
+          });
+        } else {
+          return res.json({
+            success: true,
+            result: data
+          });
+        }
+      }).sort({
+        'created': -1
+      }).limit(500)
+      .skip(parseInt(skip));
   },
 
   // Get all properties - Individual
@@ -364,6 +381,28 @@ let propertyRecord = {
     }).sort({
       'created': -1
     });
+  },
+
+  // Get all properties - Individual
+  getDistinctProperties: (req, res) => {
+    PropertyRecord.find({
+      'document_status': 1
+    }, (err, data) => {
+      if (err) {
+        res.json({
+          success: false,
+          result: []
+        });
+      } else {
+        getDistinct(data).then(docs => {
+          return res.json({
+            all: data.length,
+            distinct: docs.length,
+            first: docs[0]
+          });
+        });
+      }
+    }).limit(3000);
   }
 
 }

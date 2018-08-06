@@ -12,7 +12,6 @@ var fs = require('fs');
 var rfs = require('rotating-file-stream');
 var path = require('path');
 var config = require('./config/database');
-var passport = require('passport');
 var routes = require('./routes/routes');
 var headers = require('./middleware/headers');
 var session = require('./middleware/sessionmanager');
@@ -21,6 +20,7 @@ var cors = require('cors');
 var morgan = require('morgan');
 var analytical = require('./middleware/analytical');
 var port = process.env.PORT || 5110;
+var ip = '192.168.10.4';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database, {
