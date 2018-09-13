@@ -3,7 +3,7 @@ let StreetRecord = require('../model/street.model');
 let StreetPhoto = require('../model/street.photo.model');
 
 //App Library
-let photoWriter = require('./photo.writer.controller');
+let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
 
@@ -97,7 +97,7 @@ let streetRecord = {
       if (result) {
         sr.serverResponse(res, payload.signature, true);
       } else {
-        photoWriter({
+        pw.photoWriter({
           id: payload.street_id,
           photo: payload.photo,
           document: 'streets'

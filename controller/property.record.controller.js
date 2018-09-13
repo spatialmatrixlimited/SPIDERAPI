@@ -6,7 +6,7 @@ let alasql = require('alasql');
 let BSN = require('../model/bsn.model');
 
 //App Library
-let photoWriter = require('./photo.writer.controller');
+let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
 let imageProcessor = require('./image.processor');
@@ -172,7 +172,7 @@ let propertyRecord = {
       if (result) {
         sr.serverResponse(res, payload.signature, true);
       } else {
-        photoWriter({
+        pw.photoWriter({
           id: payload.property_id,
           photo: payload.photo,
           document: 'properties'

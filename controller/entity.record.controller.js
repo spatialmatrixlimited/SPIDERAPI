@@ -4,7 +4,7 @@ let PropertyRecord = require('../model/property.model');
 let EntityPhoto = require('../model/entity.photo.model');
 
 //App Library
-let photoWriter = require('./photo.writer.controller');
+let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
 
@@ -137,7 +137,7 @@ let entityRecord = {
       if (result) {
         sr.serverResponse(res, payload.signature, true);
       } else {
-        photoWriter({
+        pw.photoWriter({
           id: payload.entity_id,
           photo: payload.photo,
           document: 'entities'
