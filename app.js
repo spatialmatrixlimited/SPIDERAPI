@@ -19,7 +19,7 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 var morgan = require('morgan');
 var analytical = require('./middleware/analytical');
-var port = process.env.PORT || 5110;
+var port = process.env.PORT || 5120;
 var ip = '192.168.10.4';
 
 mongoose.Promise = global.Promise;
