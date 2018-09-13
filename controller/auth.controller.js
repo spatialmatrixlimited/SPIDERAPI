@@ -22,7 +22,6 @@
     }
 
     var authenticate = (req, res, data) => {
-      console.log(data);
       var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
       if (hashThis.hashed === data.security.accesskey) {
 
@@ -72,6 +71,8 @@
 
       //Authenticate user
       authenticateMobileUser: (req, res) => {
+
+      console.log(req.body);
         User.findOne({
           'personal.email': req.body.email,
           'documentstatus': 1,
