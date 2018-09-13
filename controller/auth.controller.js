@@ -22,16 +22,17 @@
     }
 
     var authenticate = (req, res, data) => {
+      console.log(data);
       var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
       if (hashThis.hashed === data.security.accesskey) {
 
         //log signin  rate for analytics
         analytics.logSignIn(req);
-
+        
         User.findOneAndUpdate({
           '_id': data._id
         }, {
-          'personal.one_signal_id': req.body.oneId,
+          'personal.one_signal_id': req.body.oneId ? req.body.oneId : '',
           'last_seen': new Date()
         }, {
           fields: {
