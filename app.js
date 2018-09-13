@@ -82,11 +82,6 @@ app.listen(port, function () {
     console.log('SPiDER Server is running on port ' + port);
 });
 
-/* let w3wInterval = setInterval(()=>{
-    w3wEngine.processStreet();
-    w3wEngine.processProperty();
-    w3wEngine.processEntity();
-},(15 * (60 * 1000))); */
 
 mongoose.connection.on('open', function () {
     console.log('SPiDER Database is connected');
@@ -95,7 +90,6 @@ mongoose.connection.on('open', function () {
 // If the connection throws an error
 mongoose.connection.on('error', (err) => {
     console.log('Mongoose default connection error: ' + err);
-    //clearInterval(w3wInterval);
 });
 
 // When the connection is disconnected

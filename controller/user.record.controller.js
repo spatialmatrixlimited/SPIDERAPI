@@ -5,6 +5,7 @@ let User = require('../model/user.model');
 let hashMe = require('../lib/cryptic');
 let makeCase = require('../lib/stringagent');
 let imageProcessor = require('./image.processor');
+let sr = require('./server.response');
 
 //eMail Notification
 let jet = require('./mailjet.controller');
@@ -27,17 +28,9 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -56,14 +49,10 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-           //send welcome email
-           let notificationPayload = {
+          //send welcome email
+          let notificationPayload = {
             firstname: makeCase.titleCase(data.personal.firstname),
             email: data.personal.email,
             new_password: payload.password,
@@ -72,11 +61,7 @@ let userRecord = {
           //jet.mailJet(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
           mailer(notificationPayload.email, notificationPayload.title, accountNotification.passwordNotifyTemplate(notificationPayload));
 
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -97,17 +82,9 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -123,23 +100,15 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
 
-   //update user 
-   removeDevice: (req, res) => {
+  //update user 
+  removeDevice: (req, res) => {
     User.findOneAndUpdate({
         '_id': req.body.id
       }, {
@@ -149,23 +118,15 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
 
-   //update organisation user
-   patchOrganisationUser: (req, res) => {
+  //update organisation user
+  patchOrganisationUser: (req, res) => {
     User.findOneAndUpdate({
         '_id': req.body.id
       }, {
@@ -180,17 +141,9 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -206,13 +159,9 @@ let userRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -240,17 +189,9 @@ let userRecord = {
         new: true
       }).exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
     });
@@ -280,13 +221,9 @@ let userRecord = {
       'documentstatus': 1
     }, (err, data) => {
       if (err) {
-        res.json({
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     }).sort({
       'last_seen': -1
@@ -300,13 +237,9 @@ let userRecord = {
       'document_owner': req.params.owner
     }, (err, data) => {
       if (err) {
-        res.json({
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     }).sort({
       'last_seen': -1
@@ -320,13 +253,9 @@ let userRecord = {
       '_id': req.params.id
     }, (err, data) => {
       if (err) {
-        res.json({
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     });
   },
@@ -339,20 +268,14 @@ let userRecord = {
     }, (err, data) => {
       if (err) {
         //res.status(404).send({success: false});
-        return res.json({
-          success: false
-        });
+        sr.serverResponse(res, {}, false);
       } else {
         if (data) {
           //res.status(200).send({success: true, data: data});
-          return res.json({
-            success: true
-          });
+          sr.serverResponse(res, {}, true);
         } else {
           //res.status(404).send({success: false});
-          return res.json({
-            success: false
-          });
+          sr.serverResponse(res, {}, false);
         }
 
       }
@@ -367,20 +290,14 @@ let userRecord = {
     }, (err, data) => {
       if (err) {
         //res.status(404).send({success: false});
-        return res.json({
-          success: false
-        });
+        sr.serverResponse(res, {}, false);
       } else {
         if (data) {
           //res.status(200).send({success: true, data: data});
-          return res.json({
-            success: true
-          });
+          sr.serverResponse(res, {}, true);
         } else {
           //res.status(404).send({success: false});
-          return res.json({
-            success: false
-          });
+          sr.serverResponse(res, {}, false);
         }
 
       }

@@ -1,32 +1,15 @@
 //Database Model
 let PropertyRecord = require('../model/property.model');
 let StreetRecord = require('../model/street.model');
+let PropertyPhoto = require('../model/property.photo.model');
 let alasql = require('alasql');
+let BSN = require('../model/bsn.model');
 
-let path = require('path');
-loki = require('lokijs')
-
-let signatures;
-const signatureStorage = path.resolve(__dirname, '../../db/signatures.db.json');
-
-let databaseInitialize = {
-  SIGNATURE: () => {
-    signatures = SIGNATURES.getCollection("signatures")
-    if (signatures === null) {
-      signatures = SIGNATURES.addCollection('signatures', {
-        indices: ['id']
-      });
-    }
-  }
-}
-
-
-let SIGNATURES = new loki(signatureStorage, {
-  autoload: true,
-  autoloadCallback: databaseInitialize.SIGNATURE,
-  autosave: true,
-  autosaveInterval: 5000
-});
+//App Library
+let photoWriter = require('./photo.writer.controller');
+let documentSignature = require('./signature.controller');
+let sr = require('./server.response');
+let imageProcessor = require('./image.processor');
 
 let getPropsIds = (dist) => {
   return new Promise(resolve => {
@@ -45,70 +28,94 @@ let getDistinct = (data) => {
   });
 }
 
+let updateBSN = (bsn) => {
+  return new Promise((resolve, reject)=>{
+    BSN.findOneAndUpdate({'bsn': bsn, 'modified': new Date()},{'used': true})
+    .then(data=>{
+      resolve(true);
+    })
+    .catch(err=>{
+      reject(err);
+    })
+  });
+}
 
-//App Library
-let imageProcessor = require('./image.processor');
 
-//Other Library
-let fs = require('fs');
+
+//Record Controller Object
+
+let addPropertyPhoto = (payload) => {
+  return new Promise(resolve => {
+    PropertyRecord.findOneAndUpdate({
+      'property.property_id': payload.id
+    }, {
+      '$push': {
+        'property_photos': {
+          'snapshot_position': payload.snapshot_position,
+          'url': payload.url
+        }
+      }
+    }).exec((err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
 
 let propertyRecord = {
 
   //add new street record
   addNewProperty: (req, res) => {
     let payload = req.body;
-    let _signatures = [];
-    _signatures = signatures.find({
-      'signature': payload.signature
-    });
-    if (_signatures.length > 0) {
-      res.json({
-        success: true,
-        result: _signatures[0].signature
-      });
-    } else {
-      let newRecord = new PropertyRecord({
-        document_owner: payload.document_owner,
-        property: payload.property,
-        contact: payload.contact,
-        location: payload.location,
-        enumerator: payload.enumerator,
-        document_status: 1,
-        created: new Date(),
-        signature: payload.signature
-      });
-
-      newRecord.save().then((propertyData) => {
-        if (propertyData) {
-          StreetRecord.findOneAndUpdate({
-            'street.street_id': payload.property.street_id
-          }, {
-            $inc: {
-              properties: 1
-            }
-          }, (err, streetData) => {
-            signatureData = signatures.insert({
-              'id': propertyData._id,
-              'signature': propertyData.signature
-            });
-            res.json({
-              success: true,
-              result: propertyData.signature
-            });
-          });
-        } else {
-          res.json({
-            success: false,
-            result: ''
-          });
-        }
-      }, (err) => {
-        res.json({
-          success: false,
-          result: ''
+    documentSignature.isSigned(payload.signature).then(result => {
+      if (result) {
+        sr.serverResponse(res, payload.signature, true);
+      } else {
+        let newRecord = new PropertyRecord({
+          document_owner: payload.document_owner,
+          property: payload.property,
+          contact: payload.contact,
+          location: payload.location,
+          enumerator: payload.enumerator,
+          document_status: 1,
+          created: new Date(),
+          signature: payload.signature
         });
-      });
-    }
+
+        newRecord.save().then((propertyData) => {
+          if (propertyData) {
+            let newPhoto = new PropertyPhoto({
+              'property.property_id': payload.property.property_id,
+              'property.street_id': payload.property.street_id,
+              'property.building_serial_number': payload.property.building_serial_number
+            });
+
+            newPhoto.save().then(saved => {
+              StreetRecord.findOneAndUpdate({
+                'street.street_id': payload.property.street_id
+              }, {
+                $inc: {
+                  properties: 1
+                }
+              }, (err, streetData) => {
+                documentSignature.sign(propertyData.signature, propertyData._id).then(response => {
+                  updateBSN(payload.property.building_serial_number)
+                  .then(status => sr.serverResponse(res, propertyData.signature, true))
+                  .catch(err=> sr.serverResponse(res, propertyData.signature, true) );
+                });
+              });
+            });
+          } else {
+            sr.serverResponse(res, {}, false);
+          }
+        }, (err) => {
+          sr.serverResponse(res, {}, false);
+        });
+      }
+    });
   },
 
   //update property record
@@ -126,17 +133,9 @@ let propertyRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -151,9 +150,7 @@ let propertyRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false
-          });
+          sr.serverResponse(res, {}, false);
         } else {
           StreetRecord.findOneAndUpdate({
             'street.street_id': data.property.street_id
@@ -162,10 +159,7 @@ let propertyRecord = {
               properties: -1
             }
           }, (err, streetData) => {
-
-            res.json({
-              success: true
-            });
+            sr.serverResponse(res, {}, true);
           });
         }
       });
@@ -174,64 +168,53 @@ let propertyRecord = {
   //update property image via mobile
   patchPropertyPhoto: (req, res) => {
     let payload = req.body;
-    let _signatures = [];
-    _signatures = signatures.find({
-      'signature': payload.signature
-    });
-    if (_signatures.length > 0) {
-      res.json({
-        success: true,
-        message: 'Operation successful!',
-        result: _signatures[0].signature
-      });
-    } else {
-      let now = new Date().getTime();
-      let data = payload.photo;
-      let filename = `${payload.property_id}_${now}.jpg`;
-      let dir = '/var/www/photos.spider.com.ng/html/spider/properties/';
-
-      let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
-      let binaryData = Buffer.from(base64Data, 'base64');
-
-      let wstream = fs.createWriteStream(dir + filename);
-      wstream.on('finish', () => {
-        imageProcessor(`${dir}${filename}`);
-        PropertyRecord.findOneAndUpdate({
-          'property.property_id': payload.property_id
-        }, {
-          '$push': {
-            'property_photos': {
-              'title': payload.title,
-              'snapshot_position': payload.snapshot_position,
-              'url': 'https://photos.spider.com.ng/spider/properties/' + filename,
-              'location': payload.location
-            }
-          }
-        }, {
-          new: true
-        }).exec((err, data) => {
-          if (err || !data) {
-            res.json({
-              success: false,
-              message: 'Operation failed!',
-              result: ''
-            });
+    documentSignature.isSigned(payload.signature).then(result => {
+      if (result) {
+        sr.serverResponse(res, payload.signature, true);
+      } else {
+        photoWriter({
+          id: payload.property_id,
+          photo: payload.photo,
+          document: 'properties'
+        }).then(response => {
+          if (response['success']) {
+            let url = 'https://photos.spider.com.ng/spider/properties/' + response['filename'];
+            addPropertyPhoto({
+              id: payload.property_id,
+              snapshot_position: payload.snapshot_position,
+              url: url
+            }).then(response=>{
+              PropertyPhoto.findOneAndUpdate({
+                'property.property_id': payload.property_id
+              }, {
+                '$push': {
+                  'property_photos': {
+                    'snapshot_position': payload.snapshot_position,
+                    'url': url
+                  }
+                }
+              }, {
+                new: true
+              }).exec((err, data) => {
+  
+                if (err || !data) {
+                  sr.serverResponse(res, {}, false);
+                } else {
+                  documentSignature.sign(payload.signature, payload.property_id).then(reply => {
+                    sr.serverResponse(res, data.signature, true);
+                  });
+                }
+  
+              });
+            }).catch(err=>{
+              sr.serverResponse(res, {}, false);
+            })
           } else {
-            signatureData = signatures.insert({
-              'id': payload.property_id,
-              'signature': data.signature
-            });
-            res.json({
-              success: true,
-              message: 'Operation successful!',
-              result: data.signature
-            });
+            sr.serverResponse(res, {}, false);
           }
         });
-      });
-      wstream.write(binaryData);
-      wstream.end();
-    }
+      }
+    });
   },
 
   processPropertyImage: (req, res) => {
@@ -258,15 +241,9 @@ let propertyRecord = {
         'document_status': 1
       }, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            result: []
-          });
+          sr.serverResponse(res, [], false);
         } else {
-          return res.json({
-            success: true,
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       }).sort({
         'created': -1
@@ -281,15 +258,9 @@ let propertyRecord = {
       'document_status': 1
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          success: true,
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     });
   },
@@ -301,15 +272,9 @@ let propertyRecord = {
       '_id': req.params.id
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          success: true,
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     });
   },
@@ -321,15 +286,9 @@ let propertyRecord = {
         'document_status': 1
       }, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            result: []
-          });
+          sr.serverResponse(res, [], false);
         } else {
-          return res.json({
-            success: true,
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       }).sort({
         'created': -1
@@ -345,15 +304,9 @@ let propertyRecord = {
         'document_owner': req.params.owner
       }, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            result: []
-          });
+          sr.serverResponse(res, [], false);
         } else {
-          return res.json({
-            success: true,
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       }).sort({
         'created': -1
@@ -368,15 +321,9 @@ let propertyRecord = {
       'document_owner': req.params.owner
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          success: true,
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     }).sort({
       'created': -1
@@ -389,10 +336,7 @@ let propertyRecord = {
       'document_status': 1
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
         getDistinct(data).then(docs => {
           return res.json({

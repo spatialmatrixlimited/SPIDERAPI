@@ -12,6 +12,15 @@
     //Other Library
     var geocoder = require('geocoder');
 
+    //Serve Response Function
+    let serverResponse = (res, data, token, success) =>{
+      return res.json({
+        success: success,
+        token:  token,
+        result: data
+      });
+    }
+
     var authenticate = (req, res, data) => {
       var hashThis = hashMe.hashPassword(req.body.password, data.security.accesscode);
       if (hashThis.hashed === data.security.accesskey) {
@@ -22,6 +31,7 @@
         User.findOneAndUpdate({
           '_id': data._id
         }, {
+          'personal.one_signal_id': req.body.oneId,
           'last_seen': new Date()
         }, {
           fields: {
@@ -32,32 +42,16 @@
           new: true
         }, (err, userdata) => {
           if (err) {
-            return res.json({
-              success: false,
-              message: 'Authentication failed!',
-              token: '',
-              result: {}
-            });
+            serverResponse(res, {}, '', false);
           } else {
             var sessionToken = jwt.sign(data._id, asset.secret, {
               expiresIn: 60 * 60 * 24
             });
-
-            return res.json({
-              success: true,
-              message: 'Authenticated!',
-              token: sessionToken,
-              result: userdata,
-            });
+            serverResponse(res, userdata, sessionToken, true);
           }
         });
       } else {
-        res.json({
-          success: false,
-          message: 'Authentication failed, wrong password for ' + req.body.email,
-          token: '',
-          result: {}
-        });
+        serverResponse(res, {}, '', false);
       }
     }
 
@@ -155,13 +149,7 @@
                   var sessionToken = jwt.sign(data._id, asset.secret, {
                     expiresIn: 60 * 60 * 24
                   });
-
-                  return res.json({
-                    success: true,
-                    message: 'Authenticated!',
-                    token: sessionToken,
-                    result: userdata,
-                  });
+                  serverResponse(res, userdata, sessionToken, true);
                 }
               });
 
@@ -209,13 +197,7 @@
                   var sessionToken = jwt.sign(data._id, asset.secret, {
                     expiresIn: 60 * 60 * 24
                   });
-
-                  return res.json({
-                    success: true,
-                    message: 'Authenticated!',
-                    token: sessionToken,
-                    result: userdata,
-                  });
+                  serverResponse(res, userdata, sessionToken, true);
                 }
               });
 

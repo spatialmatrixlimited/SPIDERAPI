@@ -8,6 +8,9 @@ const entityRecord = require('../controller/entity.record.controller');
 const streetRecord = require('../controller/street.record.controller');
 const support = require('../controller/support.controller');
 const oracle = require('../controller/oracle.controller');
+const notification = require('../controller/notification.controller');
+const bsn = require('../controller/bsn.controller');
+
 
 router.post('/authenticate', auth.authenticateUser); //authenticate user
 router.post('/authenticate/mobile', auth.authenticateMobileUser); //authenticate mobile user
@@ -18,15 +21,34 @@ router.post('/street', streetRecord.addNewStreet); //add new street data
 router.post('/property', propertyRecord.addNewProperty); //add new property data
 router.post('/entity', entityRecord.addNewEntity); //add new property entity data
 router.post('/support', support.add); //add new support message
+router.post('/notification', notification.add); //add new notification message
+router.post('/broadcast/notification', notification.broadcast); //add new broadcast notification message
+
+
+//BSN MANAGER
+
+//Load BSN
+router.post('/bsn', bsn.loadBSN);
+//Get BSN
+router.get('/bsn/:skip', bsn.getBSN);
+router.get('/bsn/user/:id', bsn.getUserBSN);
+
+//remove BSN
+router.delete('/bsn/:id', bsn.removeBSN);
+//assign BSN
+router.patch('/bsn/assign', bsn.assignBSN);
 
 //router.get('/analytics', oracle.getAnalytics);
-router.get('/w3w/engine/start', oracle.w3wEngineStart); //w3w Engine Start
 router.get('/make/love/:code', oracle.generateLove); //make love
 router.get('/headers', oracle.generateHeaders); //generate headers
 router.get('/current/version/:app', oracle.getCurrentVersion); //get app current version
 
 router.get('/support/:id', support.getOne); //get one
 router.get('/support', support.getAll); //get all
+
+router.get('/notifications/:id/:skip/:limit', notification.get); //get user's notifications
+router.get('/notifications', notification.getAll); //get all notifications
+router.get('/broadcast/notifications/:id', notification.getAll); //get all broadcast notifications
 
 router.get('/user/:id', userRecord.getUser); //single user data
 router.get('/users', userRecord.getUsers); //all users data
@@ -69,6 +91,8 @@ router.patch('/user/device/remove', userRecord.removeDevice); //remove user devi
 router.patch('/user/avatar', userRecord.patchAvatar); //update user avatar
 router.patch('/user/onesignal', userRecord.patchUserPlayerId); //update user OneSignal Player ID
 router.patch('/user/security', userRecord.patchUserSecurity); //update user password
+
+router.patch('/notification/read', notification.read); //mark notification as read
 
 router.patch('/street', streetRecord.patchStreet); //update street data
 router.patch('/property', propertyRecord.patchProperty); //update property data

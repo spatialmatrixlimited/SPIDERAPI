@@ -1,38 +1,35 @@
 //Database Model
 let EntityRecord = require('../model/entity.model');
 let PropertyRecord = require('../model/property.model');
-
-let path = require('path');
-loki = require('lokijs')
-
-let signatures;
-    const signatureStorage = path.resolve(__dirname, '../../db/signatures.db.json');
-
-    let databaseInitialize = {
-        SIGNATURE: () => {
-            signatures = SIGNATURES.getCollection("signatures")
-            if (signatures === null) {
-                signatures = SIGNATURES.addCollection('signatures', {
-                    indices: ['id']
-                });
-            }
-        }
-    }
-    
-    
-    let SIGNATURES = new loki(signatureStorage, {
-        autoload: true,
-        autoloadCallback: databaseInitialize.SIGNATURE,
-        autosave: true,
-        autosaveInterval: 5000
-    });
-
+let EntityPhoto = require('../model/entity.photo.model');
 
 //App Library
-let imageProcessor = require('./image.processor');
+let photoWriter = require('./photo.writer.controller');
+let documentSignature = require('./signature.controller');
+let sr = require('./server.response');
 
-//Other Library
-let fs = require('fs');
+//Record Controller Object
+
+let addEntityPhoto = (payload) => {
+  return new Promise(resolve => {
+    EntityRecord.findOneAndUpdate({
+      'entity.entity_id': payload.id
+    }, {
+      '$push': {
+        'property_photos': {
+          'snapshot_position': payload.snapshot_position,
+          'url': payload.url
+        }
+      }
+    }).exec((err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
 
 let entityRecord = {
 
@@ -40,58 +37,50 @@ let entityRecord = {
   addNewEntity: (req, res) => {
     let payload = req.body;
     let _signatures = [];
-    _signatures = signatures.find({
-      'signature': payload.signature
-    });
-    if (_signatures.length >  0) {
-      res.json({
-        success: true,
-        result: _signatures[0].signature
-      });
-    } else {
-      let newRecord = new EntityRecord({
-        document_owner: payload.document_owner,
-        property_id: payload.property_id,
-        entity: payload.entity,
-        contact: payload.contact,
-        location: payload.location,
-        enumerator: payload.enumerator,
-        document_status: 1,
-        created: new Date(),
-        signature: payload.signature
-      });
-
-      newRecord.save().then((entityData) => {
-        if (entityData) {
-          PropertyRecord.findOneAndUpdate({
-            'property.property_id': payload.property_id
-          }, {
-            $inc: {
-              entities: 1
-            }
-          }, (err, propertyData) => {
-            signatureData = signatures.insert({
-              'id': entityData._id,
-              'signature': entityData.signature
-            });
-              res.json({
-                success: true,
-                result: entityData.signature
-              });
-          });
-        } else {
-          res.json({
-            success: false,
-            result: ''
-          });
-        }
-      }, (err) => {
-        res.json({
-          success: false,
-          result: ''
+    documentSignature.isSigned(payload.signature).then(response => {
+      if (response) {
+        sr.serverResponse(res, _signatures[0].signature, true);
+      } else {
+        let newRecord = new EntityRecord({
+          document_owner: payload.document_owner,
+          property_id: payload.property_id,
+          entity: payload.entity,
+          contact: payload.contact,
+          location: payload.location,
+          enumerator: payload.enumerator,
+          document_status: 1,
+          created: new Date(),
+          signature: payload.signature
         });
-      });
-    }
+
+        newRecord.save().then((entityData) => {
+          if (entityData) {
+            let photoRecord = new EntityPhoto({
+              'entity.entity_id': payload.entity.entity_id,
+              'entity.property_id': payload.entity.property_id,
+              'entity.building_serial_number': payload.entity.building_serial_number
+            });
+            photoRecord.save().then(result => {
+              PropertyRecord.findOneAndUpdate({
+                'property.property_id': payload.property_id
+              }, {
+                $inc: {
+                  entities: 1
+                }
+              }, (err, propertyData) => {
+                documentSignature.sign(entityData.signature, entityData._id).then(response => {
+                  sr.serverResponse(res, entityData.signature, true);
+                });
+              });
+            });
+          } else {
+            sr.serverResponse(res, '', false);
+          }
+        }, (err) => {
+          sr.serverResponse(res, '', false);
+        });
+      }
+    });
   },
 
   //update entity record
@@ -109,17 +98,9 @@ let entityRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Operation failed!',
-            result: {}
-          });
+          sr.serverResponse(res, {}, false);
         } else {
-          res.json({
-            success: true,
-            message: 'Operation successful!',
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       });
   },
@@ -134,9 +115,7 @@ let entityRecord = {
       })
       .exec((err, data) => {
         if (err) {
-          res.json({
-            success: false
-          });
+          sr.serverResponse(res, {}, false);
         } else {
           PropertyRecord.findOneAndUpdate({
             'property.property_id': data.property_id
@@ -145,9 +124,7 @@ let entityRecord = {
               entities: -1
             }
           }, (err, _data) => {
-            res.json({
-              success: true
-            });
+            sr.serverResponse(res, {}, true);
           });
         }
       });
@@ -156,73 +133,56 @@ let entityRecord = {
   //update property entity image via mobile
   patchEntityPhoto: (req, res) => {
     let payload = req.body;
-    let _signatures = [];
-    _signatures = signatures.find({
-      'signature': payload.signature
-    });
-    if (_signatures.length >  0) {
-      res.json({
-        success: true,
-        message: 'Operation successful!',
-        result: _signatures[0].signature
-      });
-    } else {
-      let now = new Date().getTime();
-      let data = payload.photo;
-      let filename = `${payload.entity_id}_${now}.jpg`;
-      let dir = '/var/www/photos.spider.com.ng/html/spider/entities/';
-
-      let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
-      let binaryData = Buffer.from(base64Data, 'base64');
-
-      let wstream = fs.createWriteStream(dir + filename);
-      wstream.on('finish', () => {
-        imageProcessor(`${dir}${filename}`);
-        EntityRecord.findOneAndUpdate({
-          'entity.entity_id': payload.entity_id
-        }, {
-          '$push': {
-            'property_photos': {
-              'title': payload.title,
-              'snapshot_position': payload.snapshot_position,
-              'url': 'https://photos.spider.com.ng/spider/entities/' + filename,
-              'location': payload.location
-            }
-          }
-        }, {
-          new: true
-        }).exec((err, data) => {
-          if (err) {
-            res.json({
-              success: false,
-              message: 'Operation failed!',
-              result: ''
+    documentSignature.isSigned(payload.signature).then(result => {
+      if (result) {
+        sr.serverResponse(res, payload.signature, true);
+      } else {
+        photoWriter({
+          id: payload.entity_id,
+          photo: payload.photo,
+          document: 'entities'
+        }).then(response => {
+          if (response['success']) {
+            let url = 'https://photos.spider.com.ng/spider/entities/' + response['filename'];
+            addEntityPhoto({
+              id: payload.entity_id,
+              url: url,
+              snapshot_position: payload.snapshot_position
+            }).then(response => {
+              EntityPhoto.findOneAndUpdate({
+                'entity.entity_id': payload.entity_id
+              }, {
+                '$push': {
+                  'property_photos': {
+                    'snapshot_position': payload.snapshot_position,
+                    'url': url
+                  }
+                },
+                'signature': payload.signature
+              }, {
+                new: true
+              }).exec((err, data) => {
+                if (err) {
+                  sr.serverResponse(res, {}, false);
+                } else {
+                  if (data) {
+                    documentSignature.sign(payload.signature, payload.entity_id).then(response => {
+                      sr.serverResponse(res, data.signature, true);
+                    });
+                  } else {
+                    sr.serverResponse(res, {}, false);
+                  }
+                }
+              });
+            }).catch(err => {
+              sr.serverResponse(res, {}, false);
             });
           } else {
-            if(data){
-              signatureData = signatures.insert({
-                'id': payload.entity_id,
-                'signature': data.signature
-              });
-              res.json({
-                success: true,
-                message: 'Operation successful!',
-                result: data.signature
-              });
-            }else{
-              res.json({
-                success: false,
-                message: 'Operation failed!',
-                result: ''
-              });
-            }
-            
+            sr.serverResponse(res, {}, false);
           }
         });
-      });
-      wstream.write(binaryData);
-      wstream.end();
-    }
+      }
+    });
   },
 
   processEntityImage: (req, res) => {
@@ -249,15 +209,9 @@ let entityRecord = {
         'document_status': 1
       }, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            result: []
-          });
+          sr.serverResponse(res, [], false);
         } else {
-          return res.json({
-            success: true,
-            result: data
-          });
+          sr.serverResponse(res, data, true);
         }
       }).sort({
         'created': -1
@@ -272,15 +226,9 @@ let entityRecord = {
       '_id': req.params.id
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          success: true,
-          result: data
-        });
+        sr.serverResponse(res, data, true);
       }
     });
   },
@@ -291,15 +239,9 @@ let entityRecord = {
       'property_id': req.params.id
     }, (err, data) => {
       if (err) {
-        res.json({
-          success: false,
-          result: []
-        });
+        sr.serverResponse(res, [], false);
       } else {
-        return res.json({
-          success: true,
-          result: data
-        });
+        sr.serverResponse(res, data, false);
       }
     });
   }

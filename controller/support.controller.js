@@ -5,6 +5,8 @@ let Support = require('../model/support.model');
 let supportMail = require('../views/support.template');
 let mailer = require('./mailer.controller');
 
+//Other library
+sr = require('./server.response');
 
 let support = {
 
@@ -23,14 +25,10 @@ let support = {
                 //send support email
                 let title = `New support request from ${payload.user.firstname} sent from ${payload.device.model}`;
                 mailer('asheori.research@gmail.com', title, supportMail.supportTemplate(payload));
-                return res.json({
-                    success: true
-                });
+                sr.serverResponse(res, {}, true);
 
             }, (err) => {
-                res.json({
-                    success: false
-                });
+                sr.serverResponse(res, {}, false);
             });
     },
 
@@ -40,13 +38,9 @@ let support = {
             'documentstatus': 1
         }, (err, data) => {
             if (err) {
-                res.json({
-                    result: []
-                });
+                sr.serverResponse(res, [], false);
             } else {
-                return res.json({
-                    result: data
-                });
+                sr.serverResponse(res, data, true);
             }
         }).sort({
             'last_seen': -1
@@ -60,13 +54,9 @@ let support = {
             '_id': req.params.id
         }, (err, data) => {
             if (err) {
-                res.json({
-                    result: {}
-                });
+                sr.serverResponse(res, {}, false);
             } else {
-                return res.json({
-                    result: data
-                });
+                sr.serverResponse(res, data, true);
             }
         });
     }

@@ -35,6 +35,10 @@ var userSchema = new UserSchema({
     gender: {
       type: String,
       default: ''
+    },
+    one_signal_id: {
+      type: String,
+      default: ''
     }
   },
   organisation: {

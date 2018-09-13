@@ -1,7 +1,6 @@
 let Republic = require('../model/republic.model');
 let jwt = require('jsonwebtoken');
 let asset = require('../config/assets');
-let w3wEngine = require('../controller/w3w.engine.controller');
 let api = {
 
   /****************************************************************************************
@@ -76,20 +75,6 @@ let api = {
           });
         });
     }
-  },
-
-
-  /****************************************************************************************
-    W3W Resolution Engine
-  ****************************************************************************************/
-
-  w3wEngineStart: (req, res) => {
-    w3wEngine.processStreet();
-    w3wEngine.processProperty();
-    w3wEngine.processEntity();
-    res.json({
-      status: 'Engine Started'
-    });
   }
 }
 
