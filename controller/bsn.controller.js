@@ -32,7 +32,6 @@ let bsn = {
                 'used': false
             })
             .then(docs => {
-                console.log(docs);
                 sr.serverResponse(res, docs, true);
             })
             .catch(err => {

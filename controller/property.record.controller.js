@@ -30,7 +30,7 @@ let getDistinct = (data) => {
 
 let updateBSN = (bsn) => {
   return new Promise((resolve, reject)=>{
-    BSN.findOneAndUpdate({'bsn': bsn, 'modified': new Date()},{'used': true})
+    BSN.findOneAndUpdate({'bsn': bsn},{'used': true, 'modified': new Date()})
     .then(data=>{
       resolve(true);
     })
