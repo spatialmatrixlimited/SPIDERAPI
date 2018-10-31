@@ -1,11 +1,11 @@
 
-let path = require('path');
-loki = require('lokijs')
+const path = require('path');
+const loki = require('lokijs')
 
-let signatures;
+var signatures;
 const signatureStorage = path.resolve(__dirname, '../../db/signatures.db.json');
 
-let databaseInitialize = {
+const databaseInitialize = {
   SIGNATURE: () => {
     signatures = SIGNATURES.getCollection("signatures")
     if (signatures === null) {
@@ -17,7 +17,7 @@ let databaseInitialize = {
 }
 
 
-let SIGNATURES = new loki(signatureStorage, {
+const SIGNATURES = new loki(signatureStorage, {
   autoload: true,
   autoloadCallback: databaseInitialize.SIGNATURE,
   autosave: true,
@@ -25,7 +25,7 @@ let SIGNATURES = new loki(signatureStorage, {
 });
 
 
-let isSigned = (dataSignature)=> {
+const isSigned = (dataSignature)=> {
     return new Promise((resolve)=>{
         let _signatures = [];
         _signatures = signatures.find({
@@ -39,7 +39,7 @@ let isSigned = (dataSignature)=> {
     });
 }
 
-let sign = (dataSignature, id) => {
+const sign = (dataSignature, id) => {
     return new Promise((resolve)=>{
         signatureData = signatures.insert({
             'id': id,

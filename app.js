@@ -29,7 +29,7 @@ mongoose.connect(config.database, {
         autoIndex: false
     },
     promiseLibrary: global.Promise
-});
+}).catch((e)=>console.log(e));
 
 
 
