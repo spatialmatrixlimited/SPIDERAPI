@@ -1,3 +1,3 @@
 module.exports = {
-  database: 'mongodb://spider:spider.com2018@178.128.245.251:30177/spiderbase?authSource=admin'
+  database: 'mongodb://spiderapp:SPiDERbyMobisoft2018@ds233451-a0.mlab.com:33451,ds233451-a1.mlab.com:33451/spiderdb?replicaSet=rs-ds233451'
 };
