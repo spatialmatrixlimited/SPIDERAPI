@@ -1,26 +1,18 @@
-var pmx = require('pmx').init({
-    http: true, // HTTP routes logging (default: true)
-    ignore_routes: [/socket\.io/, /notFound/], // Ignore http routes with this pattern (Default: [])
-    errors: true, // Exceptions logging (default: true)
-    custom_probes: true, // Auto expose JS Loop Latency and HTTP req/s as custom metrics
-    network: true, // Network monitoring at the application level
-    ports: true // Shows which ports your app is listening on (default: false)
-});
-var express = require('express');
-var bodyParser = require('body-parser');
-var fs = require('fs');
-var rfs = require('rotating-file-stream');
-var path = require('path');
-var config = require('./config/database');
-var routes = require('./routes/routes');
-var headers = require('./middleware/headers');
-var session = require('./middleware/sessionmanager');
-var mongoose = require('mongoose');
-var cors = require('cors');
-var morgan = require('morgan');
-var analytical = require('./middleware/analytical');
-var port = process.env.PORT || 5120;
-var ip = '192.168.10.4';
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const rfs = require('rotating-file-stream');
+const path = require('path');
+const config = require('./config/database');
+const routes = require('./routes/routes');
+const headers = require('./middleware/headers');
+const session = require('./middleware/sessionmanager');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const morgan = require('morgan');
+const analytical = require('./middleware/analytical');
+const port = process.env.PORT || 5120;
+const ip = '192.168.10.4';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database, {
@@ -33,16 +25,16 @@ mongoose.connect(config.database, {
 
 
 
-var app = express();
+const app = express();
 
 //set directory of log files
-var logDirectory = path.join(__dirname, 'log')
+const logDirectory = path.join(__dirname, 'log')
 
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
 // create a rotating write stream
-var accessLogStream = rfs('access.log', {
+const accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
     path: logDirectory
 })
