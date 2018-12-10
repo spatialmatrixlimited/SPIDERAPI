@@ -18,4 +18,4 @@ var streetPhotoSchema = new StreetPhotoSchema({
     signature: { type: String, default: '' }
 });
 
-module.exports = mongoose.model('StreetPhoto', streetPhotoSchema, 'street_photos');
+module.exports = mongoose.model('StreetPhoto', streetPhotoSchema, 'spider_street_photos');

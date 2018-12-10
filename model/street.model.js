@@ -46,4 +46,4 @@ var streetSchema = new StreetSchema({
     signature: { type: String, default: '' }
 });
 
-module.exports = mongoose.model('StreetRecord', streetSchema, 'streets');
+module.exports = mongoose.model('StreetRecord', streetSchema, 'spider_streets');

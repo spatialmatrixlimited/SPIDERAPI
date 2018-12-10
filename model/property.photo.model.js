@@ -26,4 +26,4 @@ var propertyPhotoSchema = new PropertyPhotoSchema({
     signature: { type: String, default: '' }
 });
 
-module.exports = mongoose.model('PropertyPhoto', propertyPhotoSchema, 'property_photos');
+module.exports = mongoose.model('PropertyPhoto', propertyPhotoSchema, 'spider_property_photos');

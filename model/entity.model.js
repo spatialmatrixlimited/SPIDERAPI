@@ -51,4 +51,4 @@ var entitySchema = new EntitySchema(
     }
 );
 
-module.exports = mongoose.model('EntityRecord', entitySchema, 'entities');
+module.exports = mongoose.model('EntityRecord', entitySchema, 'spider_entities');

@@ -64,4 +64,4 @@ var propertySchema = new PropertySchema({
     }
 });
 
-module.exports = mongoose.model('PropertyRecord', propertySchema, 'properties');
+module.exports = mongoose.model('PropertyRecord', propertySchema, 'spider_properties');

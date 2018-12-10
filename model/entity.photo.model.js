@@ -26,4 +26,4 @@ var entityPhotoSchema = new EntityPhotoSchema({
     signature: { type: String, default: '' }
 });
 
-module.exports = mongoose.model('EntityPhoto', entityPhotoSchema, 'entity_photos');
+module.exports = mongoose.model('EntityPhoto', entityPhotoSchema, 'spider_entity_photos');
