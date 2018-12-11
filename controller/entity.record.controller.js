@@ -143,7 +143,7 @@ let entityRecord = {
           document: 'entities'
         }).then(response => {
           if (response['success']) {
-            let url = 'https://photos.spider.com.ng/spider/entities/' + response['filename'];
+            let url = 'https://photo1.spider.com.ng/spider/entities/' + response['filename'];
             addEntityPhoto({
               id: payload.entity_id,
               url: url,
@@ -186,14 +186,14 @@ let entityRecord = {
   },
 
   processEntityImage: (req, res) => {
-    const baseURL = '/var/www/photos.spider.com.ng/html/spider/entities/';
+    const baseURL = '/var/www/photo1.spider.com.ng/html/spider/entities/';
     let filename = req.body.filename;
     imageProcessor(`${baseURL}${filename}`).then(response => {
       res.json({
         success: true,
         message: 'Operation successful!',
         result: {
-          url: `https://photos.spider.com.ng/spider/entities/${filename}`
+          url: `https://photo1.spider.com.ng/spider/entities/${filename}`
         }
       });
     }).catch(err => {

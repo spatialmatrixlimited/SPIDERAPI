@@ -179,7 +179,7 @@ let propertyRecord = {
           document: 'properties'
         }).then(response => {
           if (response['success']) {
-            let url = 'https://photos.spider.com.ng/spider/properties/' + response['filename'];
+            let url = 'https://photo1.spider.com.ng/spider/properties/' + response['filename'];
             addPropertyPhoto({
               id: payload.property_id,
               snapshot_position: payload.snapshot_position,

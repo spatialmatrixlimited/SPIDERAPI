@@ -103,7 +103,7 @@ let streetRecord = {
           document: 'streets'
         }).then(response => {
           if (response['success']) {
-            let url = 'https://photos.spider.com.ng/spider/streets/' + response['filename'];
+            let url = 'https://photo1.spider.com.ng/spider/streets/' + response['filename'];
             addStreetPhoto({
               id: payload.street_id,
               snapshot_position: payload.snapshot_position,
