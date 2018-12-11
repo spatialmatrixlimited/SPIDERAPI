@@ -102,9 +102,10 @@ let propertyRecord = {
                 }
               }, (err, streetData) => {
                 documentSignature.sign(propertyData.signature, propertyData._id).then(response => {
-                  updateBSN(payload.property.building_serial_number)
+                  sr.serverResponse(res, propertyData.signature, true);
+                  /* updateBSN(payload.property.building_serial_number)
                   .then(status => sr.serverResponse(res, propertyData.signature, true))
-                  .catch(err=> sr.serverResponse(res, propertyData.signature, true) );
+                  .catch(err=> sr.serverResponse(res, propertyData.signature, true) ); */
                 });
               });
             });
