@@ -85,7 +85,8 @@
             failed(req, res);
           } else {
             if (data.device && data.device.is_available) {
-              if (data.device.is_active) {
+              authenticate(req, res, data);
+              /* if (data.device.is_active) {
                 if(data.device.specification.uuid == req.body.device.specification.uuid){
                   authenticate(req, res, data);
                 }else{
@@ -93,7 +94,7 @@
                 }
               } else {
                 failed(req, res);
-              }
+              } */
             } else {
               //add device to account
               User.findOneAndUpdate({
