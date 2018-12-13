@@ -6,7 +6,7 @@ let photoWriter = (payload) => {
         let now = new Date().getTime();
         let data = payload.photo;
         let filename = `${payload.id}_${now}.jpg`;
-        let dir = `/var/www/photos.spider.com.ng/html/spider/${payload.document}/`;
+        let dir = `/var/www/photo1.spider.com.ng/html/spider/${payload.document}/`;
 
         let base64Data = data.replace(/^data:image\/\w+;base64,/, "");
         let binaryData = Buffer.from(base64Data, 'base64');
