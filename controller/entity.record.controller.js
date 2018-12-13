@@ -39,7 +39,7 @@ let entityRecord = {
     let _signatures = [];
     documentSignature.isSigned(payload.signature).then(response => {
       if (response) {
-        sr.serverResponse(res, _signatures[0].signature, true);
+        sr.serverResponse(res, payload.signature, true);
       } else {
         let newRecord = new EntityRecord({
           document_owner: payload.document_owner,
