@@ -3,6 +3,10 @@ var StreetSchema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var streetSchema = new StreetSchema({
+    document_owner: {
+        type: ObjectId,
+        ref: 'User'
+    },
     street_photos: [{
         url: String,
         snapshot_position: String

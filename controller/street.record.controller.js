@@ -6,7 +6,7 @@ let StreetPhoto = require('../model/street.photo.model');
 let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
-
+let appCollection = require('./app.collection.controller');
 
 //Record Controller Object
 
@@ -60,7 +60,11 @@ let streetRecord = {
 
             photoRecord.save().then(saved => {
               documentSignature.sign(streetData.signature, streetData._id).then(response => {
-                sr.serverResponse(res, streetData.signature, true);
+
+                appCollection.createNewStreet(payload).then(()=>{
+                  sr.serverResponse(res, streetData.signature, true);
+                });
+                
               });
             });
 
@@ -125,7 +129,11 @@ let streetRecord = {
                   sr.serverResponse(res, {}, false);
                 } else {
                   documentSignature.sign(payload.signature, payload.street_id).then(reply => {
-                    sr.serverResponse(res, data.signature, true);
+
+                    appCollection.createNewStreetPhoto(payload, url).then(()=>{
+                      sr.serverResponse(res, data.signature, true);
+                    });
+
                   });
                 }
               });

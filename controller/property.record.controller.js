@@ -10,6 +10,7 @@ let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
 let imageProcessor = require('./image.processor');
+let appCollection = require('./app.collection.controller');
 
 let getPropsIds = (dist) => {
   return new Promise(resolve => {
@@ -102,10 +103,14 @@ let propertyRecord = {
                 }
               }, (err, streetData) => {
                 documentSignature.sign(propertyData.signature, propertyData._id).then(response => {
-                  sr.serverResponse(res, propertyData.signature, true);
-                  /* updateBSN(payload.property.building_serial_number)
-                  .then(status => sr.serverResponse(res, propertyData.signature, true))
-                  .catch(err=> sr.serverResponse(res, propertyData.signature, true) ); */
+                  
+                  appCollection.createNewProperty(payload).then(()=>{
+                    sr.serverResponse(res, propertyData.signature, true);
+                    /* updateBSN(payload.property.building_serial_number)
+                    .then(status => sr.serverResponse(res, propertyData.signature, true))
+                    .catch(err=> sr.serverResponse(res, propertyData.signature, true) ); */
+                  });
+
                 });
               });
             });
@@ -202,7 +207,11 @@ let propertyRecord = {
                   sr.serverResponse(res, {}, false);
                 } else {
                   documentSignature.sign(payload.signature, payload.property_id).then(reply => {
-                    sr.serverResponse(res, data.signature, true);
+                    
+                    appCollection.createNewPropertyPhoto(payload, url).then(()=>{
+                      sr.serverResponse(res, data.signature, true);
+                    });
+                    
                   });
                 }
   

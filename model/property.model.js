@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var PropertySchema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var propertySchema = new PropertySchema({
+    document_owner: {
+        type: ObjectId,
+        ref: 'User'
+    },
     property: {
         property_id: { type: String, unique: true, required: true },
         street_id: String,

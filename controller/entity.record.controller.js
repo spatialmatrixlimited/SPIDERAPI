@@ -7,6 +7,7 @@ let EntityPhoto = require('../model/entity.photo.model');
 let pw = require('./photo.writer.controller');
 let documentSignature = require('./signature.controller');
 let sr = require('./server.response');
+let appCollection = require('./app.collection.controller');
 
 //Record Controller Object
 
@@ -36,7 +37,6 @@ let entityRecord = {
   //add new street record
   addNewEntity: (req, res) => {
     let payload = req.body;
-    let _signatures = [];
     documentSignature.isSigned(payload.signature).then(response => {
       if (response) {
         sr.serverResponse(res, payload.signature, true);
@@ -69,7 +69,11 @@ let entityRecord = {
                 }
               }, (err, propertyData) => {
                 documentSignature.sign(entityData.signature, entityData._id).then(response => {
-                  sr.serverResponse(res, entityData.signature, true);
+                  
+                  appCollection.createNewEntity(payload).then(() => {
+                    sr.serverResponse(res, entityData.signature, true);
+                  });
+                  
                 });
               });
             });
@@ -166,9 +170,13 @@ let entityRecord = {
                   sr.serverResponse(res, {}, false);
                 } else {
                   if (data) {
-                    documentSignature.sign(payload.signature, payload.entity_id).then(response => {
-                      sr.serverResponse(res, data.signature, true);
+                    
+                    appCollection.createNewEntityPhoto(payload, url).then(()=>{
+                      documentSignature.sign(payload.signature, payload.entity_id).then(response => {
+                        sr.serverResponse(res, data.signature, true);
+                      });
                     });
+                    
                   } else {
                     sr.serverResponse(res, {}, false);
                   }

@@ -4,6 +4,10 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var entitySchema = new EntitySchema(
     {
+        document_owner: {
+            type: ObjectId,
+            ref: 'User'
+        },
         property_id: String,
         building_serial_number: String,
         entity: {
