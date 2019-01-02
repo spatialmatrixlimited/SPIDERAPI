@@ -14,7 +14,7 @@ const appCollection = require('../controller/app.collection.controller');
 
 // Log Routes
 router.get('/success/logs', appCollection.successLog);
-route.get('/error/log', appCollection.errorLog);
+router.get('/error/log', appCollection.errorLog);
 
 router.post('/authenticate', auth.authenticateUser); //authenticate user
 router.post('/authenticate/mobile', auth.authenticateMobileUser); //authenticate mobile user
