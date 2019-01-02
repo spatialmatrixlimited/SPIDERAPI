@@ -47,7 +47,8 @@ var propertySchema = new PropertySchema({
     },
     location: {
         type: {
-            type: String
+            type: String,
+            default: 'Point'
         },
         coordinates: {
             type: [Number],

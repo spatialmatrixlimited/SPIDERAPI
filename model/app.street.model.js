@@ -44,7 +44,8 @@ var streetSchema = new StreetSchema({
         url: String,
         location: {
             type: {
-                type: String
+                type: String,
+                default: 'Point'
             },
             coordinates: {
                 type: [Number],

@@ -11,7 +11,7 @@ const appCollection = {
                 'property_id': payload.property_id,
                 'entity': payload.entity,
                 'contact': payload.contact,
-                'location.coordinates': [payload.coordinates.longitude, payload.coordinates.latitude],
+                'location.coordinates': [],
                 'location.whatthreewords': '',
                 'enumerator': payload.enumerator,
                 'document_status': 1,
@@ -126,7 +126,7 @@ const appCollection = {
             }).exec((err, data) => {
                 resolve();
             });
-            
+
         });
     }
 }
