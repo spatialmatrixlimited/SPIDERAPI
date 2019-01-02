@@ -1,6 +1,32 @@
 const EntityCollection = require('../model/app.entity.model');
 const PropertyCollection = require('../model/app.property.model');
 const StreetCollection = require('../model/app.street.model');
+const crypt = require('../lib/cryptic');
+
+const errorBox = [];
+const successBox = [];
+
+const logEntry = (type, payload, err) => {
+    if(err) {
+        const newLog = {
+            _id: crypt.codeGen(),
+            type: type,
+            error: err,
+            data: payload,
+            created: new Date()
+        }
+        errorBox.push(newLog);
+    } else {
+        const newLog = {
+            _id: crypt.codeGen(),
+            type: type,
+            error: {},
+            data: payload,
+            created: new Date()
+        }
+        successBox.push(newLog);
+    }
+}
 
 const appCollection = {
     createNewEntity: (payload) => {
@@ -19,6 +45,7 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
+                logEntry('Entity', err ? payload : savedEntry, err);
                 resolve();
             });
 
@@ -40,6 +67,7 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
+                logEntry('Entity Photo', err ? payload : savedEntry, err);
                 resolve();
             });
 
@@ -61,6 +89,7 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
+                logEntry('Property', err ? payload : savedEntry, err);
                 resolve();
             });
 
@@ -82,6 +111,7 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
+                logEntry('Property Photo', err ? payload : savedEntry, err);
                 resolve();
             });
 
@@ -103,6 +133,7 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
+                logEntry('Street', err ? payload : savedEntry, err);
                 resolve();
             });
 
@@ -124,11 +155,19 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
+                logEntry('Street Photo', err ? payload : savedEntry, err);
                 resolve();
             });
 
         });
+    },
+    errorLog: (req, res) => {
+        res.status(200).send({ data: errorBox });
+    },
+    successLog: (req, res) => {
+        res.status(200).send({ data: successBox });
     }
+
 }
 
 module.exports = appCollection;

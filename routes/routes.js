@@ -10,7 +10,11 @@ const support = require('../controller/support.controller');
 const oracle = require('../controller/oracle.controller');
 const notification = require('../controller/notification.controller');
 const bsn = require('../controller/bsn.controller');
+const appCollection = require('../controller/app.collection.controller');
 
+// Log Routes
+router.get('/success/logs', appCollection.successLog);
+route.get('/error/log', appCollection.errorLog);
 
 router.post('/authenticate', auth.authenticateUser); //authenticate user
 router.post('/authenticate/mobile', auth.authenticateMobileUser); //authenticate mobile user
