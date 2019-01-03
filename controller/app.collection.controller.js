@@ -191,11 +191,13 @@ const appCollection = {
     },
     errorLog: (req, res) => {
         res.status(200).send({
+            total: errorBox.length,
             data: errorBox
         });
     },
     successLog: (req, res) => {
         res.status(200).send({
+            total: successBox.length,
             data: successBox
         });
     }
