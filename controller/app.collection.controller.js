@@ -6,9 +6,23 @@ const crypt = require('../lib/cryptic');
 const errorBox = [];
 const successBox = [];
 
+errorBox.push({
+    _id: crypt.codeGen(),
+    type: 'Genesis',
+    error: 'None',
+    data: {},
+    created: new Date()
+});
+successBox.push({
+    _id: crypt.codeGen(),
+    type: 'Genesis',
+    error: 'None',
+    data: {},
+    created: new Date()
+});
 const logEntry = (type, payload, err) => {
-    return new Promise(resolve=>{
-        if(err) {
+    return new Promise(resolve => {
+        if (err) {
             const newLog = {
                 _id: crypt.codeGen(),
                 type: type,
@@ -51,7 +65,7 @@ const appCollection = {
 
             newEntry.save().then((savedEntry, err) => {
                 logEntry('Entity', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
@@ -73,7 +87,7 @@ const appCollection = {
                 }
             }).exec((err, data) => {
                 logEntry('Entity Photo', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
@@ -95,7 +109,7 @@ const appCollection = {
 
             newEntry.save().then((savedEntry, err) => {
                 logEntry('Property', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
@@ -117,7 +131,7 @@ const appCollection = {
                 }
             }).exec((err, data) => {
                 logEntry('Property Photo', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
@@ -139,7 +153,7 @@ const appCollection = {
 
             newEntry.save().then((savedEntry, err) => {
                 logEntry('Street', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
@@ -161,16 +175,20 @@ const appCollection = {
                 }
             }).exec((err, data) => {
                 logEntry('Street Photo', err ? payload : savedEntry, err)
-                .then(() => resolve() );
+                    .then(() => resolve());
             });
 
         });
     },
     errorLog: (req, res) => {
-        res.status(200).send({ data: errorBox });
+        res.status(200).send({
+            data: errorBox
+        });
     },
     successLog: (req, res) => {
-        res.status(200).send({ data: successBox });
+        res.status(200).send({
+            data: successBox
+        });
     }
 
 }
