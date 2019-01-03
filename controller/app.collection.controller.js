@@ -94,7 +94,7 @@ const appCollection = {
                         'location.whatthreewords': ''
                     }
                 }
-            }).exec((err, data) => {
+            }).exec((err, savedEntry) => {
                 logEntry('Entity Photo', err ? payload : savedEntry, err)
                     .then(() => resolve());
             });
@@ -138,7 +138,7 @@ const appCollection = {
                         'location.whatthreewords': ''
                     }
                 }
-            }).exec((err, data) => {
+            }).exec((err, savedEntry) => {
                 logEntry('Property Photo', err ? payload : savedEntry, err)
                     .then(() => resolve());
             });
