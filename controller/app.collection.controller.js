@@ -7,25 +7,30 @@ const errorBox = [];
 const successBox = [];
 
 const logEntry = (type, payload, err) => {
-    if(err) {
-        const newLog = {
-            _id: crypt.codeGen(),
-            type: type,
-            error: err,
-            data: payload,
-            created: new Date()
+    return new Promise(resolve=>{
+        if(err) {
+            const newLog = {
+                _id: crypt.codeGen(),
+                type: type,
+                error: err,
+                data: payload,
+                created: new Date()
+            }
+            errorBox.push(newLog);
+        } else {
+            const newLog = {
+                _id: crypt.codeGen(),
+                type: type,
+                error: {},
+                data: payload,
+                created: new Date()
+            }
+            successBox.push(newLog);
         }
-        errorBox.push(newLog);
-    } else {
-        const newLog = {
-            _id: crypt.codeGen(),
-            type: type,
-            error: {},
-            data: payload,
-            created: new Date()
-        }
-        successBox.push(newLog);
-    }
+
+        resolve();
+
+    });
 }
 
 const appCollection = {
@@ -45,8 +50,8 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
-                logEntry('Entity', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Entity', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
@@ -67,8 +72,8 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
-                logEntry('Entity Photo', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Entity Photo', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
@@ -89,8 +94,8 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
-                logEntry('Property', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Property', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
@@ -111,8 +116,8 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
-                logEntry('Property Photo', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Property Photo', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
@@ -133,8 +138,8 @@ const appCollection = {
             });
 
             newEntry.save().then((savedEntry, err) => {
-                logEntry('Street', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Street', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
@@ -155,8 +160,8 @@ const appCollection = {
                     }
                 }
             }).exec((err, data) => {
-                logEntry('Street Photo', err ? payload : savedEntry, err);
-                resolve();
+                logEntry('Street Photo', err ? payload : savedEntry, err)
+                .then(() => resolve() );
             });
 
         });
