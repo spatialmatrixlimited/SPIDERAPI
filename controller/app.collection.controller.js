@@ -20,6 +20,15 @@ successBox.push({
     data: {},
     created: new Date()
 });
+
+const gpsAdapter = (coordinates) => {
+    if(coordinates.longitude && coordinates.latitude) {
+        return [payload.coordinates.longitude, payload.coordinates.latitude];
+    } else {
+        return [];
+    }
+}
+
 const logEntry = (type, payload, err) => {
     return new Promise(resolve => {
         if (err) {
@@ -56,7 +65,7 @@ const appCollection = {
                 'property_id': payload.property_id,
                 'entity': payload.entity,
                 'contact': payload.contact,
-                'location.coordinates': [],
+                'location.coordinates': payload.coordinates ? gpsAdapter(payload.coordinates) : [],
                 'location.whatthreewords': '',
                 'enumerator': payload.enumerator,
                 'document_status': 1,
@@ -98,7 +107,7 @@ const appCollection = {
                 'document_owner': payload.document_owner,
                 'property': payload.property,
                 'contact': payload.contact,
-                'location.coordinates': [payload.coordinates.longitude || 0, payload.coordinates.latitude || 0],
+                'location.coordinates': payload.coordinates ? gpsAdapter(payload.coordinates) : [],
                 'location.whatthreewords': '',
                 'enumerator': payload.enumerator,
                 'document_status': 1,
@@ -142,7 +151,7 @@ const appCollection = {
             const newEntry = new StreetCollection({
                 'document_owner': payload.document_owner,
                 'street': payload.street,
-                'location.coordinates': [payload.coordinates.longitude || 0, payload.coordinates.latitude || 0],
+                'location.coordinates': payload.coordinates ? gpsAdapter(payload.coordinates) : [],
                 'location.whatthreewords': '',
                 'enumerator': payload.enumerator,
                 'document_status': 1,
