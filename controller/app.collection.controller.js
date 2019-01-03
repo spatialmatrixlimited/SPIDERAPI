@@ -22,7 +22,7 @@ successBox.push({
 });
 
 const gpsAdapter = (coordinates) => {
-    if(coordinates.longitude && coordinates.latitude) {
+    if (coordinates.longitude && coordinates.latitude) {
         return [payload.coordinates.longitude, payload.coordinates.latitude];
     } else {
         return [];
@@ -182,7 +182,7 @@ const appCollection = {
                         'location.whatthreewords': ''
                     }
                 }
-            }).exec((err, data) => {
+            }).exec((err, savedEntry) => {
                 logEntry('Street Photo', err ? payload : savedEntry, err)
                     .then(() => resolve());
             });
