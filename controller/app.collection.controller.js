@@ -128,7 +128,7 @@ const appCollection = {
             const newEntry = new StreetCollection({
                 'document_owner': payload.document_owner,
                 'street': payload.street,
-                'location.coordinates': [payload.coordinates.longitude, payload.coordinates.latitude],
+                'location.coordinates': [payload.coordinates.longitude || 0, payload.coordinates.latitude || 0],
                 'location.whatthreewords': '',
                 'enumerator': payload.enumerator,
                 'document_status': 1,
