@@ -5,7 +5,7 @@ var supportTemplate = (payload) => {
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>SPiDER by Mobiforce | SpatialMatrix Property Identification & Enumeration</title>
+        <title>MetroData Insight</title>
       
         <style type="text/css">
           /* Take care of image borders and formatting, client hacks */
@@ -268,7 +268,7 @@ var supportTemplate = (payload) => {
               <table cellspacing="0" cellpadding="0" width="600" class="w320">
                 <tr>
                   <td class="header-lg">
-                    SPiDER by Mobiforce Support
+                    MetroData Insight Support
                   </td>
                 </tr>
                 <tr>

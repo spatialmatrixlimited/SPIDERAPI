@@ -5,7 +5,7 @@ var welcomeTemplate = (payload) => {
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>SPiDER by Mobiforce | SpatialMatrix Property Identification & Enumeration</title>
+      <title>MetroData Insight</title>
     
       <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
@@ -263,13 +263,13 @@ var welcomeTemplate = (payload) => {
             <table cellspacing="0" cellpadding="0" width="600" class="w320">
               <tr>
                 <td class="header-lg">
-                  Welcome to SPiDER by Mobiforce
+                  Welcome to MetroData Insight
                 </td>
               </tr>
               <tr>
                 <td class="free-text">
                   <p>
-                    <b>Hello ${payload.firstname},</b> you are now registered as a SPiDER user. Click the button below to verify your email OR copy and paste the link below into your browser address bar.
+                    <b>Hello ${payload.firstname},</b> you are now registered as a MetroData Insight user. Click the button below to verify your email OR copy and paste the link below into your browser address bar.
                   </p>
                   <p>
                   If you are having trouble using the link below, simply reply this email and our support team will be happy to sort you out.
@@ -287,11 +287,11 @@ var welcomeTemplate = (payload) => {
                   <![endif]-->
                   <h3>Account Verification Link</h3>
                   <p>
-                    <a href="https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}">https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}</a>
+                    <a href="https://verification.metro.asheori.com/validate/${payload.user_type}/${payload.email}">https://verification.metro.asheori.com/validate/${payload.user_type}/${payload.email}</a>
                     
                   </p>
                   <p>
-                    <a class="button-mobile" href="https://verification.spider.com.ng/validate/${payload.user_type}/${payload.email}"
+                    <a class="button-mobile" href="https://verification.metro.asheori.com/validate/${payload.user_type}/${payload.email}"
                     style="background-color:rgb(2, 3, 22);border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">Verify My Email</a>
                  
                   </p>
