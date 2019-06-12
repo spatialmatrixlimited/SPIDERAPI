@@ -239,7 +239,7 @@ var welcomeTemplate = (payload) => {
                     <table cellpadding="0" cellspacing="0" width="600" class="w320">
                       <tr>
                         <td class="pull-left mobile-header-padding-left" style="vertical-align: middle;">
-                          <a href=""><img height="60" src="https://admin.spider.com.ng/assets/icon/favicon.png" alt="logo"></a>
+                          <a href=""><img height="60" src="https://metro.asheori.com/assets/icon/favicon.png" alt="logo"></a>
                         </td>
                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
                           &nbsp;  

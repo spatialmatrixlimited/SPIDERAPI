@@ -72,11 +72,10 @@
       //Authenticate user
       authenticateMobileUser: (req, res) => {
 
-      console.log(req.body);
         User.findOne({
           'personal.email': req.body.email,
-          'documentstatus': 1,
-          'security.is_active': true
+          'documentstatus': 1,/* 
+          'security.is_active': true */
         }, (err, data) => {
           if (err) {
             failed(req, res);

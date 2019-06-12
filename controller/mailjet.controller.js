@@ -8,9 +8,9 @@
         .post("send")
         .request({
             "FromEmail":"female.hire@wuntlist.com",
-            "FromName":"SPiDER by Mobiforce",
+            "FromName":"MetroData Insight",
             "Subject": title,
-            "Text-part":"Important notification from SPiDER by Mobiforce | SpatialMatrix Property Identification & Enumeration",
+            "Text-part":"Important notification from MetroData Insight",
             "Html-part":template,
             "Recipients":[
                     {

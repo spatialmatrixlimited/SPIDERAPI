@@ -61,7 +61,7 @@ let registration = {
             firstname: makeCase.titleCase(payload.firstname),
             email: payload.email,
             user_type: payload.user_type ? payload.user_type.toLowerCase() : 'individual',
-            title: `Hello ${makeCase.titleCase(payload.firstname)}, Welcome to SPiDER by Mobiforce`
+            title: `Hello ${makeCase.titleCase(payload.firstname)}, Welcome to MetroData Insight`
           };
           //jet.mailJet(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
           mailer(welcomePayload.email, welcomePayload.title, userWelcome.welcomeTemplate(welcomePayload));
