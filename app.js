@@ -11,11 +11,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
 const analytical = require('./middleware/analytical');
-const port = process.env.PORT || 5120;
+const port = process.env.PORT || 6111;
 const ip = '192.168.10.4';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.database, {
+mongoose.connect(config.mlab, {
     useMongoClient: true,
     config: {
         autoIndex: false
